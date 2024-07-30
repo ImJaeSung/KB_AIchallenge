@@ -39,7 +39,7 @@ export default function GoogleCallback() {
   }, [navigate, location]);
 
   if (isProcessing) {
-    return <div>로그인 처리 중...</div>;
+    return null;
   }
 
   return null;

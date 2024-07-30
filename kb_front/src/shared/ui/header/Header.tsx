@@ -7,6 +7,7 @@ import banner from "assets/header/banner.png";
 import link from "assets/header/link.png";
 import centermenus from "assets/header/centermenus.png";
 import { Link, Outlet } from "react-router-dom";
+import { useMemberStore } from "shared/store";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -93,6 +94,7 @@ const CenterMenus = styled.img`
 `;
 
 export default function Header() {
+  const { member, isLoading } = useMemberStore();
   const googleClientId =
     "481511611619-a24vhh7i2lcibgvm7dtp9efiukm3bdbl.apps.googleusercontent.com";
   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=http://localhost:5173/callback&response_type=code&scope=openid%20profile%20email`;
@@ -113,7 +115,11 @@ export default function Header() {
               <img src={glasses} />
             </HeaderMenus>
           </HeaderMenuContainer>
-          <LoginContainer id={"login-container"}>
+          <LoginContainer
+            style={{
+              display: isLoading ? "none" : member ? "none" : "flex",
+            }}
+          >
             <LoginDiv>
               <Link
                 to={url}

@@ -78,15 +78,17 @@ const HomeImage = styled.img`
 `;
 
 export default function HomePage() {
-  const { setMember } = useMemberStore();
+  const { setMember, setIsLoading } = useMemberStore();
 
   useEffect(() => {
     const getMemberInfoAndSet = async () => {
       const memberData = await getMemberInfo();
       setMember(memberData);
+      setIsLoading(false);
     };
 
     if (!localStorage.getItem("accessToken")) {
+      setIsLoading(false);
       return;
     }
 
