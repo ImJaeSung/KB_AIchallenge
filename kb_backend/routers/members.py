@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 import requests
 from dto.memberDto import *
+from utils.jwtUtil import *
 
 router = APIRouter()
 
@@ -10,7 +11,8 @@ def read_root(loginRequest: LoginRequest):
     accessToken = getGoogleAccessToken(loginRequest.code)
     memberEmail = getGoogleMemberEmail(accessToken)
 
-    return {"code": loginRequest.code}
+    accessToken = createJwtToken(memberEmail)
+    return {accessToken: accessToken}
 
 
 def getGoogleAccessToken(code):

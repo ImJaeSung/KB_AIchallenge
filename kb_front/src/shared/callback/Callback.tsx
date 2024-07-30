@@ -17,7 +17,7 @@ export default function GoogleCallback() {
 
       if (code) {
         // 서버로 코드 전송 및 토큰 수신
-        const { accessToken, refreshToken } = await fetch(
+        const { accessToken } = await fetch(
           `http://localhost:8000/members/login`,
           {
             method: "POST",
@@ -32,7 +32,6 @@ export default function GoogleCallback() {
 
         // 토큰을 로컬 스토리지에 저장
         localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
 
         // 홈페이지로 리다이렉트
         navigate("/");
