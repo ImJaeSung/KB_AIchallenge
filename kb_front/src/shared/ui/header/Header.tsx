@@ -3,6 +3,9 @@ import logo from "assets/logo.png";
 import glasses from "assets/glasses.png";
 import border from "assets/border.png";
 import vertical from "assets/vertical.png";
+import banner from "assets/banner.png";
+import link from "assets/link.png";
+import centermenus from "assets/centermenus.png";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -65,6 +68,22 @@ const LoginDiv = styled.div`
   width: 64px;
 `;
 
+const Banner = styled.img`
+  margin-top: -60px;
+`;
+
+const Link = styled.img`
+  margin-top: -200px;
+
+  position: absolute;
+  right: 17%;
+`;
+
+const CenterMenus = styled.img`
+  margin-top: -70px;
+  margin-left: -20px;
+`;
+
 export default function Header() {
   return (
     <HeaderContainer>
@@ -85,6 +104,9 @@ export default function Header() {
           <LoginDiv>로그인</LoginDiv>
           <LoginDiv>인증센터</LoginDiv>
         </LoginContainer>
+        <Banner src={banner} />
+        <Link src={link} />
+        <CenterMenus src={centermenus} />
       </HeaderInnerDiv>
     </HeaderContainer>
   );

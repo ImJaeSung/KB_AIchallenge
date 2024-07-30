@@ -7,7 +7,6 @@ import "./global.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Header />
-    <h1>Hello, World!</h1>
     <HomePage />
   </React.StrictMode>,
 );
