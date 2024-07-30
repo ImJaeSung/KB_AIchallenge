@@ -6,6 +6,9 @@ import securities from "assets/home/securities.png";
 import apps from "assets/home/apps.png";
 import footer from "assets/home/footer.png";
 import chatbot from "assets/home/chatbot.png";
+import { useMemberStore } from "shared/store";
+import { useEffect } from "react";
+import { getMemberInfo } from "../../shared/api";
 
 const HomePageContainer = styled.div`
   display: flex;
@@ -75,6 +78,21 @@ const HomeImage = styled.img`
 `;
 
 export default function HomePage() {
+  const { setMember } = useMemberStore();
+
+  useEffect(() => {
+    const getMemberInfoAndSet = async () => {
+      const memberData = await getMemberInfo();
+      setMember(memberData);
+    };
+
+    if (!localStorage.getItem("accessToken")) {
+      return;
+    }
+
+    getMemberInfoAndSet();
+  }, []);
+
   return (
     <HomePageContainer>
       <ChatBotButtonContainer>
