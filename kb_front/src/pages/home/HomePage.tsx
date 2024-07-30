@@ -5,6 +5,7 @@ import finitems from "assets/home/finitems.png";
 import securities from "assets/home/securities.png";
 import apps from "assets/home/apps.png";
 import footer from "assets/home/footer.png";
+import chatbot from "assets/home/chatbot.png";
 
 const HomePageContainer = styled.div`
   display: flex;
@@ -23,12 +24,16 @@ const ChatBotButtonContainer = styled.div`
 `;
 
 const ChatBotButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   width: 50px;
   height: 50px;
   background-color: #f8f8f8;
   border: 1px solid #e5e5e5;
   border-radius: 10px;
-  font-size: 40px;
+  font-size: 50px;
   cursor: pointer;
   position: relative;
 
@@ -73,7 +78,9 @@ export default function HomePage() {
   return (
     <HomePageContainer>
       <ChatBotButtonContainer>
-        <ChatBotButton>🤖</ChatBotButton>
+        <ChatBotButton>
+          <img src={chatbot} />
+        </ChatBotButton>
         <Tooltip>궁금한 용어를 물어보세요!</Tooltip>
       </ChatBotButtonContainer>
       <HomeImage src={notice} />
