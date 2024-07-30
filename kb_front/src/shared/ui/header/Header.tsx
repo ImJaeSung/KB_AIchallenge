@@ -6,6 +6,7 @@ import vertical from "assets/header/vertical.png";
 import banner from "assets/header/banner.png";
 import link from "assets/header/link.png";
 import centermenus from "assets/header/centermenus.png";
+import { Link, Outlet } from "react-router-dom";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -79,7 +80,7 @@ const Banner = styled.img`
   margin-top: -60px;
 `;
 
-const Link = styled.img`
+const StorylandBox = styled.img`
   margin-top: -200px;
 
   position: absolute;
@@ -92,29 +93,46 @@ const CenterMenus = styled.img`
 `;
 
 export default function Header() {
+  const googleClientId =
+    "481511611619-a24vhh7i2lcibgvm7dtp9efiukm3bdbl.apps.googleusercontent.com";
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=http://localhost:5173/callback&response_type=code&scope=openid%20profile%20email`;
+
   return (
-    <HeaderContainer>
-      <HeaderInnerDiv>
-        <HeaderMenuContainer>
-          <img src={logo} />
-          <HeaderMenus>
-            개인 기업 <img src={vertical} style={{ margin: "0 8px" }} />
-            자산관리 부동산 퇴직연금 카드{" "}
-            <img src={vertical} style={{ margin: "0 5px" }} /> 전체 서비스{" "}
-            <img src={border} style={{ margin: "0 5px" }} />{" "}
-            <img src={vertical} style={{ margin: "0 5px" }} /> Global{" "}
-            <img src={border} style={{ margin: "0 5px" }} />
-            <img src={glasses} />
-          </HeaderMenus>
-        </HeaderMenuContainer>
-        <LoginContainer>
-          <LoginDiv>로그인</LoginDiv>
-          <LoginDiv>인증센터</LoginDiv>
-        </LoginContainer>
-        <Banner src={banner} />
-        <Link src={link} />
-        <CenterMenus src={centermenus} />
-      </HeaderInnerDiv>
-    </HeaderContainer>
+    <>
+      <HeaderContainer>
+        <HeaderInnerDiv>
+          <HeaderMenuContainer>
+            <img src={logo} />
+            <HeaderMenus>
+              개인 기업 <img src={vertical} style={{ margin: "0 8px" }} />
+              자산관리 부동산 퇴직연금 카드{" "}
+              <img src={vertical} style={{ margin: "0 5px" }} /> 전체 서비스{" "}
+              <img src={border} style={{ margin: "0 5px" }} />{" "}
+              <img src={vertical} style={{ margin: "0 5px" }} /> Global{" "}
+              <img src={border} style={{ margin: "0 5px" }} />
+              <img src={glasses} />
+            </HeaderMenus>
+          </HeaderMenuContainer>
+          <LoginContainer id={"login-container"}>
+            <LoginDiv>
+              <Link
+                to={url}
+                style={{
+                  textDecoration: "none",
+                  color: "black",
+                }}
+              >
+                로그인
+              </Link>
+            </LoginDiv>
+            <LoginDiv>인증센터</LoginDiv>
+          </LoginContainer>
+          <Banner src={banner} />
+          <StorylandBox src={link} />
+          <CenterMenus src={centermenus} />
+        </HeaderInnerDiv>
+      </HeaderContainer>
+      <Outlet />
+    </>
   );
 }
