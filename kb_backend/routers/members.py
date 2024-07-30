@@ -1,8 +1,9 @@
 from fastapi import APIRouter
+from dto.memberDto import *
 
 router = APIRouter()
 
 
-@router.get("/")
-def read_root():
-    return {"Hello": "World"}
+@router.post("/login")
+def read_root(loginRequest: LoginRequest):
+    return {"code": loginRequest.code}
