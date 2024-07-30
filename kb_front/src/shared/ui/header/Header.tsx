@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import logo from "assets/logo.png";
-import glasses from "assets/glasses.png";
-import border from "assets/border.png";
-import vertical from "assets/vertical.png";
-import banner from "assets/banner.png";
-import link from "assets/link.png";
-import centermenus from "assets/centermenus.png";
+import logo from "assets/header/logo.png";
+import glasses from "assets/header/glasses.png";
+import border from "assets/header/border.png";
+import vertical from "assets/header/vertical.png";
+import banner from "assets/header/banner.png";
+import link from "assets/header/link.png";
+import centermenus from "assets/header/centermenus.png";
 
 const HeaderContainer = styled.div`
   display: flex;
