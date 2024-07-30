@@ -16,24 +16,19 @@ export default function GoogleCallback() {
       const code = urlParams.get("code");
 
       if (code) {
-        // 서버로 코드 전송 및 토큰 수신
-        const { accessToken } = await fetch(
-          `http://localhost:8000/members/login`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              code,
-            }),
+        const response = await fetch(`http://localhost:8000/members/login`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
           },
-        ).then((response) => response.json());
+          body: JSON.stringify({
+            code,
+          }),
+        }).then((response) => response.json());
 
-        // 토큰을 로컬 스토리지에 저장
-        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("accessToken", response.accessToken);
 
-        // 홈페이지로 리다이렉트
         navigate("/");
       }
 
