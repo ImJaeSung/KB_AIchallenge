@@ -4,7 +4,8 @@ import {
   Route,
 } from "react-router-dom";
 import { HomePage } from "pages";
-import { Header } from "../shared/ui";
+import { Header } from "shared/ui";
+import { Callback } from "shared/callback";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -12,6 +13,8 @@ export const router = createBrowserRouter(
       <Route element={<Header />}>
         <Route path="/" element={<HomePage />} />
       </Route>
+
+      <Route path="callback" element={<Callback />} />
     </>,
   ),
 );
