@@ -18,6 +18,12 @@ def createAccessToken(memberEmail):
     return accessToken
 
 
+def getMemberEmailFromAccessToken(accessToken):
+    if validateAccessToken(accessToken):
+        payload = jwt.decode(accessToken, secretKey, algorithms=["HS256"])
+        return payload["memberEmail"]
+
+
 def validateAccessToken(accessToken):
     try:
         payload = jwt.decode(accessToken, secretKey, algorithms=["HS256"])

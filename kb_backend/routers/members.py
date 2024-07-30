@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 import requests
 from dto.memberDto import *
 from utils.jwtUtil import *
@@ -8,8 +8,17 @@ from datetime import datetime
 router = APIRouter()
 
 
+@router.get
+def getMemberInfo(request: Request):
+    accessToken = request.headers["Authorization"].split(" ")[1]
+    memberEmail = getMemberEmailFromAccessToken(accessToken)
+    memberData = esClient.findMemberByEmail(memberEmail)
+
+    return memberData
+
+
 @router.post("/login")
-def read_root(loginRequest: LoginRequest):
+def login(loginRequest: LoginRequest):
     accessToken = getGoogleAccessToken(loginRequest.code)
     memberEmail = getGoogleMemberEmail(accessToken)
 
