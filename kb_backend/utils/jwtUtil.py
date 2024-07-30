@@ -28,7 +28,7 @@ def validateAccessToken(accessToken):
     try:
         payload = jwt.decode(accessToken, secretKey, algorithms=["HS256"])
         memberEmail = payload["memberEmail"]
-        storedAccessToken = redisClient.get(memberEmail)
+        storedAccessToken = redisClient.get(memberEmail).decode("utf-8")
 
         if storedAccessToken is None:
             return False

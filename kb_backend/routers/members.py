@@ -8,11 +8,11 @@ from datetime import datetime
 router = APIRouter()
 
 
-@router.get
+@router.get("/")
 def getMemberInfo(request: Request):
     accessToken = request.headers["Authorization"].split(" ")[1]
     memberEmail = getMemberEmailFromAccessToken(accessToken)
-    memberData = esClient.findMemberByEmail(memberEmail)
+    memberData = findMemberByEmail(memberEmail)
 
     return memberData
 
