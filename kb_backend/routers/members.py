@@ -8,7 +8,7 @@ router = APIRouter()
 @router.post("/login")
 def read_root(loginRequest: LoginRequest):
     accessToken = getGoogleAccessToken(loginRequest.code)
-    userEmail = getGoogleUserEmail(accessToken)
+    memberEmail = getGoogleMemberEmail(accessToken)
 
     return {"code": loginRequest.code}
 
@@ -26,10 +26,10 @@ def getGoogleAccessToken(code):
     return getTokenResponse.json()["access_token"]
 
 
-def getGoogleUserEmail(accessToken):
-    getUserInfoUrl = "https://www.googleapis.com/oauth2/v3/userinfo"
-    getUserInfoResponse = requests.get(getUserInfoUrl, headers={
+def getGoogleMemberEmail(accessToken):
+    getMemberInfoUrl = "https://www.googleapis.com/oauth2/v3/userinfo"
+    getMemberInfoResponse = requests.get(getMemberInfoUrl, headers={
         "Authorization": f"Bearer {accessToken}"
     })
 
-    return getUserInfoResponse.json()["email"]
+    return getMemberInfoResponse.json()["email"]
