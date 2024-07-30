@@ -45,6 +45,26 @@ const HeaderMenus = styled.div`
   font-weight: 400;
 `;
 
+const LoginContainer = styled.div`
+  display: flex;
+
+  width: 980px;
+  height: 29px;
+
+  padding: 0 40px;
+`;
+
+const LoginDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid #e5e5e5;
+  background-color: #fff;
+  font-size: 14px;
+  width: 64px;
+`;
+
 export default function Header() {
   return (
     <HeaderContainer>
@@ -61,6 +81,10 @@ export default function Header() {
             <img src={glasses} />
           </HeaderMenus>
         </HeaderMenuContainer>
+        <LoginContainer>
+          <LoginDiv>로그인</LoginDiv>
+          <LoginDiv>인증센터</LoginDiv>
+        </LoginContainer>
       </HeaderInnerDiv>
     </HeaderContainer>
   );
