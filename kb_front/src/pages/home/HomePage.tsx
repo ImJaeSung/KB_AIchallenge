@@ -1,15 +1,16 @@
 import styled from "styled-components";
 import notice from "assets/home/notice.png";
+import services from "assets/home/services.png";
+import finitems from "assets/home/finitems.png";
+import securities from "assets/home/securities.png";
+import apps from "assets/home/apps.png";
+import footer from "assets/home/footer.png";
 
 const HomePageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`;
-
-const Notice = styled.img`
-  margin-top: 60px;
 `;
 
 const ChatBotButtonContainer = styled.div`
@@ -64,6 +65,10 @@ const Tooltip = styled.span`
   }
 `;
 
+const HomeImage = styled.img`
+  margin-top: 60px;
+`;
+
 export default function HomePage() {
   return (
     <HomePageContainer>
@@ -71,7 +76,12 @@ export default function HomePage() {
         <ChatBotButton>🤖</ChatBotButton>
         <Tooltip>궁금한 용어를 물어보세요!</Tooltip>
       </ChatBotButtonContainer>
-      <Notice src={notice} />
+      <HomeImage src={notice} />
+      <HomeImage src={services} />
+      <HomeImage src={finitems} />
+      <HomeImage src={securities} />
+      <HomeImage src={apps} />
+      <HomeImage src={footer} />
     </HomePageContainer>
   );
 }
