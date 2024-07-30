@@ -8,12 +8,11 @@ from transformers import AutoModel, AutoTokenizer
 
 # OpenAI embedding
 class OpenAIEmbedder_toDB():
-    def __init__(self, api_key, model='text-embedding-ada-002'):
+    def __init__(self, api_key):
         self.api_key = api_key
-        self.model = model
     
     def embed(self, data):
-        embedding_model = OpenAIEmbeddings(api_key = self.api_key, model = self.model)
+        embedding_model = OpenAIEmbeddings(api_key = self.api_key)
         embeddings = embedding_model.embed_documents(data)
         return embeddings
 
