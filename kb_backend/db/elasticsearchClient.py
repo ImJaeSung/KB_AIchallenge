@@ -19,3 +19,18 @@ def saveBulkData(data):
     ]
 
     helpers.bulk(esClient, actions)
+
+
+def findMemberByEmail(email):
+    searchResult = esClient.search(
+        index="members",
+        body={
+            "query": {
+                "match": {
+                    "email": email
+                }
+            }
+        }
+    )
+
+    return searchResult["hits"]["hits"]

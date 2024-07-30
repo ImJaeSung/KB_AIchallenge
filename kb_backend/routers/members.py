@@ -2,6 +2,8 @@ from fastapi import APIRouter
 import requests
 from dto.memberDto import *
 from utils.jwtUtil import *
+from db.elasticsearchClient import *
+from datetime import datetime
 
 router = APIRouter()
 
@@ -12,6 +14,10 @@ def read_root(loginRequest: LoginRequest):
     memberEmail = getGoogleMemberEmail(accessToken)
 
     accessToken = createAccessToken(memberEmail)
+    esClient.index(index="members", body={
+        "email": memberEmail,
+        "createdAt": datetime.now()
+    })
     return {"accessToken": accessToken}
 
 
