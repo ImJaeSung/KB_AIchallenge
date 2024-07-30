@@ -7,8 +7,9 @@ import apps from "assets/home/apps.png";
 import footer from "assets/home/footer.png";
 import chatbot from "assets/home/chatbot.png";
 import { useMemberStore } from "shared/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getMemberInfo } from "../../shared/api";
+import ChatScreen from "./ChatScreen.tsx";
 
 const HomePageContainer = styled.div`
   display: flex;
@@ -78,6 +79,7 @@ const HomeImage = styled.img`
 `;
 
 export default function HomePage() {
+  const [isChatScreenOpen, setIsChatScreenOpen] = useState(false);
   const { setMember, setIsLoading } = useMemberStore();
 
   useEffect(() => {
@@ -98,7 +100,11 @@ export default function HomePage() {
   return (
     <HomePageContainer>
       <ChatBotButtonContainer>
-        <ChatBotButton>
+        <ChatBotButton
+          onClick={() => {
+            setIsChatScreenOpen(!isChatScreenOpen);
+          }}
+        >
           <img src={chatbot} />
         </ChatBotButton>
         <Tooltip>궁금한 용어를 물어보세요!</Tooltip>
@@ -109,6 +115,10 @@ export default function HomePage() {
       <HomeImage src={securities} />
       <HomeImage src={apps} />
       <HomeImage src={footer} />
+      <ChatScreen
+        isChatScreenOpen={isChatScreenOpen}
+        setIsChatScreenOpen={setIsChatScreenOpen}
+      />
     </HomePageContainer>
   );
 }
