@@ -66,6 +66,13 @@ const LoginDiv = styled.div`
   background-color: #fff;
   font-size: 14px;
   width: 64px;
+
+  cursor: pointer;
+  z-index: 1;
+
+  &:hover {
+    background-color: #f7f7f7;
+  }
 `;
 
 const Banner = styled.img`
