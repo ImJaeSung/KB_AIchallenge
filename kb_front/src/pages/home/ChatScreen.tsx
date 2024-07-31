@@ -4,11 +4,14 @@ import send from "assets/home/send.png";
 import { useState } from "react";
 
 const ChatScreenContainer = styled.div`
+  // 가운데에 위치하도록
   position: fixed;
-  right: 0;
-  bottom: 0;
-  width: 400px;
-  height: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  width: 60vw;
+  height: 100vh;
   background-color: #000;
   color: #fff;
   background-color: rgba(255, 255, 255, 0.8);
@@ -22,6 +25,8 @@ const ChatScreenHeader = styled.div`
   padding: 5px 10px;
   border-bottom: 1px solid #e5e5e5;
   color: #000;
+
+  height: 5vh;
 
   background-color: rgba(238, 238, 174, 0.8);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -48,7 +53,7 @@ const ChatScreenCloseButton = styled.button`
 const ChatScreenContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 427px;
+  height: 90vh;
   overflow-y: auto;
   color: #000;
   padding: 10px; /* 컨테이너의 패딩 추가 */
@@ -71,6 +76,7 @@ const ChatScreenContent = styled.p<{
     props.$isUser ? "rgba(238, 238, 174, 0.8)" : "#f9f0b4"};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  font-size: 20px;
   padding: 10px;
   max-width: 70%;
 `;
@@ -81,7 +87,7 @@ const ChatScreenContentInputContainer = styled.div`
   align-items: center;
 
   width: 100%;
-  height: 40px;
+  height: 5vh;
   border-top: 1px solid #e5e5e5;
   border-left: none;
   border-right: none;
@@ -94,9 +100,10 @@ const ChatScreenContentInputContainer = styled.div`
 `;
 
 const ChatScreenContentInput = styled.input`
-  width: 360px;
+  width: 93%;
   height: 100%;
   padding: 0 10px;
+  font-size: 20px;
   border: none;
   background-color: transparent;
   outline: none;
@@ -112,7 +119,7 @@ const ChatScreenInputSendButton = styled.button`
   justify-content: center;
   align-items: center;
 
-  width: 40px;
+  width: 7%;
   height: 100%;
   background-color: #fff;
   border: none;
