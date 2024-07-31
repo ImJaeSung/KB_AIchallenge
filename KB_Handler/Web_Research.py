@@ -1,7 +1,7 @@
 import requests
 import re
 from bs4 import BeautifulSoup
-from Text_Preprocess import TextProcessor
+from .Text_Preprocess import TextProcessor
 
 
 class WebResearch:

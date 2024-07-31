@@ -2,7 +2,7 @@
 import os
 import importlib
 
-os.chdir('..') # TODO: main.py 파일 쓰면 없애기
+os.chdir('.') # TODO: main.py 파일 쓰면 없애기
 #%%
 from tqdm import tqdm 
 import pandas as pd
@@ -188,7 +188,7 @@ def load_data(embedding_type="openai"):
 
     """embedding data"""
     OPENAI_API_KEY = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
-    embedding_module = importlib.import_module('modules.Embedding')
+    embedding_module = importlib.import_module('KB_Handler.Embedding')
     importlib.reload(embedding_module)
     
     Embedding = embedding_module.get_embedder(
@@ -208,4 +208,5 @@ def load_data(embedding_type="openai"):
     return 
 # %%
 if __name__ == '__main__':
+    print(os.getcwd())
     load_data()
