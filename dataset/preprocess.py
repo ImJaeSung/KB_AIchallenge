@@ -190,9 +190,6 @@ def load_data(embedding_type="openai"):
 
     """embedding data"""
     OPENAI_API_KEY = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
-    embedding_module = importlib.import_module('module.Embedding')
-    importlib.reload(embedding_module)
-    
     Embedding = get_embedder(
         embedding_type=embedding_type,
         api_key=OPENAI_API_KEY,)
@@ -210,5 +207,4 @@ def load_data(embedding_type="openai"):
     return 
 # %%
 if __name__ == '__main__':
-    print(os.getcwd())
     load_data()
