@@ -11,7 +11,7 @@ const ChatScreenOuter = styled.div`
   z-index: 9999;
 
   width: 80vw;
-  height: 100vh;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,7 +20,7 @@ const ChatScreenOuter = styled.div`
 
 const ChatScreenInner = styled.div`
   width: 100%;
-  height: 95vh;
+  height: 95%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -28,7 +28,7 @@ const ChatScreenInner = styled.div`
 
 const ChatHistoriesContainer = styled.div`
   width: 20vw;
-  height: 95vh;
+  height: 100%;
   padding: 10px;
   overflow-y: auto;
 
@@ -38,7 +38,7 @@ const ChatHistoriesContainer = styled.div`
 
 const ChatScreenContainer = styled.div`
   width: 60vw;
-  height: 95vh;
+  height: 100%;
   background-color: #000;
   color: #fff;
   background-color: rgba(255, 255, 255, 0.8);
@@ -54,7 +54,7 @@ const ChatScreenHeader = styled.div`
   color: #000;
 
   width: 100%;
-  height: 5vh;
+  height: 5%;
 
   background-color: rgba(238, 238, 174, 0.8);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -81,7 +81,7 @@ const ChatScreenCloseButton = styled.button`
 const ChatScreenContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  height: 95%;
   overflow-y: auto;
   color: #000;
   padding: 10px; /* 컨테이너의 패딩 추가 */
@@ -115,7 +115,7 @@ const ChatScreenContentInputContainer = styled.div`
   align-items: center;
 
   width: 100%;
-  height: 5vh;
+  height: 5%;
   border-top: 1px solid #e5e5e5;
   border-left: none;
   border-right: none;
