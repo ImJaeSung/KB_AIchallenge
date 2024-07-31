@@ -29,11 +29,27 @@ const ChatScreenInner = styled.div`
 const ChatHistoriesContainer = styled.div`
   width: 20vw;
   height: 100%;
-  padding: 10px;
+  padding: 3px;
   overflow-y: auto;
 
   background-color: rgba(238, 238, 174, 0.8);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`;
+
+const ChatHistoryDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0;
+  padding: 5px;
+  height: 40px;
+  width: auto;
+
+  font-size: 20px;
+
+  &:hover {
+    background-color: #f1e58c;
+  }
 `;
 
 const ChatScreenContainer = styled.div`
@@ -181,7 +197,11 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
             </ChatScreenHeaderButtons>
           </ChatScreenHeader>
           <ChatScreenInner>
-            <ChatHistoriesContainer />
+            <ChatHistoriesContainer>
+              <ChatHistoryDiv>ㅋㅋ</ChatHistoryDiv>
+              <ChatHistoryDiv>ㅋㅋ</ChatHistoryDiv>
+              <ChatHistoryDiv>ㅋㅋ</ChatHistoryDiv>
+            </ChatHistoriesContainer>
             <ChatScreenContainer>
               <ChatScreenContentContainer>
                 <ChatScreenContentDiv $isUser={true}>
