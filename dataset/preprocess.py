@@ -1,17 +1,19 @@
 #%%
 import os
-import importlib
+import sys
 
 os.chdir('..') # TODO: main.py 파일 쓰면 없애기
 #%%
 from tqdm import tqdm 
 import pandas as pd
-import numpy as np
 import re
 
 import requests
 from pypdf import PdfReader
 from bs4 import BeautifulSoup
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from modules.Embedding import get_embedder
 #%%
 def load_pdf_data():
     reader = PdfReader(f'./data/2023_경제금융용어 700선-게시(저용량).pdf')
@@ -186,12 +188,11 @@ def load_data(embedding_type="openai"):
     data = pd.concat([data, craw_data], axis=0)
     data = data.reset_index(drop=True)
 
-    """embedding data"""
-    OPENAI_API_KEY = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
-    embedding_module = importlib.import_module('modules.Embedding')
-    importlib.reload(embedding_module)
+    """embedding data"""    
+    if embedding_type == "openai":
+        OPENAI_API_KEY = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
     
-    Embedding = embedding_module.get_embedder(
+    Embedding = get_embedder(
         embedding_type=embedding_type,
         api_key=OPENAI_API_KEY,)
     
