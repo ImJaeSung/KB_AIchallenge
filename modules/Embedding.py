@@ -31,7 +31,7 @@ class HuggingfaceEmbedder_toDB():
 # Function to get the appropriate embedder
 def get_embedder(embedding_type, **kwargs):
     if embedding_type == "openai":
-        return OpenAIEmbedder_toDB(api_key=kwargs.get("api_key"), model=kwargs.get("model", "text-embedding-ada-002"))
+        return OpenAIEmbedder_toDB(api_key=kwargs.get("api_key"))
     elif embedding_type == "huggingface":
         return HuggingfaceEmbedder_toDB(model_name=kwargs.get("model_name"))
     else:
