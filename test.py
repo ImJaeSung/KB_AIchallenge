@@ -28,14 +28,7 @@ from modules import Cosine_Similarity, Web_Research, Text_Preprocess
 from modules.Embedding import get_embedder
 from modules.Openai_utils import exampling_definition, simplify_definition
 
-#%%
-# Initialize None
-web_word = None
-web_definition = None
-web_link = None
-ret_word = None
-ret_definition = None
-ret_score = None
+
 #%%
 api_key="sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
 #%%
