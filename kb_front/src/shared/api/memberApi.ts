@@ -8,9 +8,17 @@ export const getMemberInfo = async () => {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-  }).then((res) => {
-    return res.json();
-  });
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .catch((err) => {
+      return null;
+    });
+
+  if (!response) {
+    return null;
+  }
 
   const member = {
     id: response[0]["_id"],

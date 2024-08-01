@@ -85,7 +85,10 @@ export default function HomePage() {
   useEffect(() => {
     const getMemberInfoAndSet = async () => {
       const memberData = await getMemberInfo();
-      setMember(memberData);
+      if (memberData) {
+        setMember(memberData);
+      }
+
       setIsLoading(false);
     };
 
