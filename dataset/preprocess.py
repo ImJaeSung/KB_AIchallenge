@@ -1,6 +1,7 @@
 #%%
 import os
 import sys
+import json
 
 os.chdir('..') # TODO: main.py 파일 쓰면 없애기
 #%%
@@ -197,6 +198,7 @@ def load_data(embedding_type="openai"):
     embedding = Embedding.embed(data["word"].to_list())
     embedding = pd.DataFrame({'embedding': embedding}) # embedding vector: an obs
     data = pd.concat([data, embedding], axis=1)
+    data['embedding'] = data['embedding'].apply(json.dumps)
     
     """data save"""
     data_dir = './assets'
