@@ -2,8 +2,9 @@ import styled from "styled-components";
 import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
 import { useState } from "react";
-import { useChatRoomsStore } from "../../shared/store";
+import { useChatRoomsStore } from "shared/store";
 import ChatContents from "./ChatContents.tsx";
+import { createChatRoom, sendChat } from "shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -145,8 +146,20 @@ const ChatScreenInputSendButton = styled.button`
 `;
 
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
-  const { chatRooms } = useChatRoomsStore();
+  const { chatRooms, addChatRoom } = useChatRoomsStore();
   const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
+
+  const handleSendChat = async () => {
+    const inputValue = document.getElementById("content-input").value;
+    if (selectedChatRoomId === 0) {
+      const { chatRoomId, createAt } = await createChatRoom();
+      addChatRoom({ chatRoomId, createAt });
+      setSelectedChatRoomId(chatRoomId);
+      sendChat(chatRoomId, inputValue);
+    } else {
+      sendChat(selectedChatRoomId, inputValue);
+    }
+  };
 
   return (
     <>
@@ -211,8 +224,11 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
             <ChatScreenContainer>
               <ChatContents selectedChatRoomId={selectedChatRoomId} />
               <ChatScreenContentInputContainer>
-                <ChatScreenContentInput placeholder="금융의 뜻이 뭐야?" />
-                <ChatScreenInputSendButton>
+                <ChatScreenContentInput
+                  placeholder="금융의 뜻이 뭐야?"
+                  id="content-input"
+                />
+                <ChatScreenInputSendButton onClick={handleSendChat}>
                   <img src={send} />
                 </ChatScreenInputSendButton>
               </ChatScreenContentInputContainer>

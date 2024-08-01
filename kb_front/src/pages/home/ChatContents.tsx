@@ -47,7 +47,7 @@ export default function ChatContents({ selectedChatRoomId }) {
     const getChatsAndSet = async () => {
       if (selectedChatRoomId) {
         const findChats = await getChatsByChatRoomId(selectedChatRoomId);
-        setChats(chats);
+        setChats(findChats);
       }
     };
 
