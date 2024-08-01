@@ -8,7 +8,7 @@ import footer from "assets/home/footer.png";
 import chatbot from "assets/home/chatbot.png";
 import { useMemberStore } from "shared/store";
 import { useEffect, useState } from "react";
-import { getChatRooms, getMemberInfo } from "shared/api";
+import { getMemberInfo } from "shared/api";
 import ChatScreen from "./ChatScreen.tsx";
 
 const HomePageContainer = styled.div`

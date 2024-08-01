@@ -1,9 +1,7 @@
 import styled from "styled-components";
 import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
-import { useEffect } from "react";
 import ChatContents from "./ChatContents.tsx";
-import { createChatRoom, getChatsByChatRoomId, sendChat } from "shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;

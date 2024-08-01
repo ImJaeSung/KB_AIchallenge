@@ -1,8 +1,4 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { getChatsByChatRoomId } from "shared/api";
-import { Simulate } from "react-dom/test-utils";
-import change = Simulate.change;
 
 interface Chat {
   id: number;

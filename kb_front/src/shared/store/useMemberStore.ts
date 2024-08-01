@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 interface Member {
-  id: number;
+  id: string;
   email: string;
 }
 
