@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatContents from "./ChatContents.tsx";
-import { createChatRoom, sendChat } from "shared/api";
+import { createChatRoom, getChatsByChatRoomId, sendChat } from "shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -144,14 +144,52 @@ const ChatScreenInputSendButton = styled.button`
   }
 `;
 
-export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
-  const chatRooms = [];
-  const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
+export default function ChatScreen({
+  isChatScreenOpen,
+  setIsChatScreenOpen,
+  chatRooms,
+  setChatRooms,
+}) {
+  const [selectedChatRoomId, setSelectedChatRoomId] = useState(null);
+  const [chats, setChats] = useState([]);
 
   const handleSendChat = async () => {
-    const inputValue = document.getElementById("content-input").value;
-    console.log(inputValue);
+    const inputDoc = document.getElementById("content-input");
+    if (inputDoc.value === "") {
+      return;
+    }
+
+    if (selectedChatRoomId === null) {
+      const { chatRoomId, createdAt } = await createChatRoom();
+      const { userChat, aiChat } = await sendChat(chatRoomId, inputDoc.value);
+      const newChatRoom = {
+        id: chatRoomId,
+        createdAt,
+      };
+      setChatRooms([...chatRooms, newChatRoom]);
+      setSelectedChatRoomId(chatRoomId);
+      setChats([...chats, userChat, aiChat]);
+      inputDoc.value = "";
+    } else {
+      const { userChat, aiChat } = await sendChat(
+        selectedChatRoomId,
+        inputDoc.value,
+      );
+      setChats([...chats, userChat, aiChat]);
+      inputDoc.value = "";
+    }
   };
+
+  useEffect(() => {
+    if (selectedChatRoomId !== null) {
+      const getChatsAndSet = async () => {
+        const chatData = await getChatsByChatRoomId(selectedChatRoomId);
+        setChats(chatData);
+      };
+
+      getChatsAndSet();
+    }
+  }, [selectedChatRoomId]);
 
   return (
     <>
@@ -197,7 +235,10 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
               ))}
             </ChatHistoriesContainer>
             <ChatScreenContainer>
-              <ChatContents selectedChatRoomId={selectedChatRoomId} />
+              <ChatContents
+                selectedChatRoomId={selectedChatRoomId}
+                chats={chats}
+              />
               <ChatScreenContentInputContainer>
                 <ChatScreenContentInput
                   placeholder="금융의 뜻이 뭐야?"

@@ -80,6 +80,7 @@ const HomeImage = styled.img`
 
 export default function HomePage() {
   const [isChatScreenOpen, setIsChatScreenOpen] = useState(false);
+  const [chatRooms, setChatRooms] = useState([]);
   const { setMember, setIsLoading } = useMemberStore();
 
   useEffect(() => {
@@ -99,6 +100,7 @@ export default function HomePage() {
 
     const getChatRoomsAndSet = async () => {
       const chatRoomsData = await getChatRooms();
+      setChatRooms(chatRoomsData);
     };
 
     getMemberInfoAndSet();
@@ -126,6 +128,8 @@ export default function HomePage() {
       <ChatScreen
         isChatScreenOpen={isChatScreenOpen}
         setIsChatScreenOpen={setIsChatScreenOpen}
+        chatRooms={chatRooms}
+        setChatRooms={setChatRooms}
       />
     </HomePageContainer>
   );

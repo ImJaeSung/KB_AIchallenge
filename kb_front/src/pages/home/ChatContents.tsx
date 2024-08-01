@@ -40,20 +40,7 @@ const ChatScreenContent = styled.p<{
   max-width: 70%;
 `;
 
-export default function ChatContents({ selectedChatRoomId }) {
-  const [chats, setChats] = useState<Chat[]>([]);
-
-  useEffect(() => {
-    const getChatsAndSet = async () => {
-      if (selectedChatRoomId) {
-        const findChats = await getChatsByChatRoomId(selectedChatRoomId);
-        setChats(findChats);
-      }
-    };
-
-    getChatsAndSet();
-  }, [selectedChatRoomId]);
-
+export default function ChatContents({ selectedChatRoomId, chats }) {
   return (
     <ChatScreenContentContainer>
       {selectedChatRoomId ? (
