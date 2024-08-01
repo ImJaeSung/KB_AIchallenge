@@ -146,7 +146,7 @@ const ChatScreenInputSendButton = styled.button`
 
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
   const { chatRooms } = useChatRoomsStore();
-  const [selectedChatRoomId, setSelectedChatRoomId] = useState(null);
+  const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
 
   return (
     <>
@@ -172,6 +172,23 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           </ChatScreenHeader>
           <ChatScreenInner>
             <ChatHistoriesContainer>
+              <ChatHistoryDiv
+                id={0}
+                key={0}
+                onClick={(event) => {
+                  if (selectedChatRoomId !== null) {
+                    const pastSelectedChatRoomDiv =
+                      document.getElementById(selectedChatRoomId);
+                    pastSelectedChatRoomDiv.style.backgroundColor = "";
+                  }
+
+                  setSelectedChatRoomId(0);
+                  event.target.style.backgroundColor = "#f1e58c";
+                }}
+                style={{ backgroundColor: "#f1e58c" }}
+              >
+                새로운 대화
+              </ChatHistoryDiv>
               {[...chatRooms].reverse().map((chatRoom, index) => (
                 <ChatHistoryDiv
                   id={chatRoom.id}
