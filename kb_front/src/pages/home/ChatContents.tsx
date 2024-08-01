@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { getChatsByChatRoomId } from "../../shared/api";
+import { getChatsByChatRoomId } from "shared/api";
 
 interface Chat {
   id: number;

@@ -2,7 +2,6 @@ import styled from "styled-components";
 import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
 import { useState } from "react";
-import { useChatRoomsStore } from "shared/store";
 import ChatContents from "./ChatContents.tsx";
 import { createChatRoom, sendChat } from "shared/api";
 
@@ -146,19 +145,12 @@ const ChatScreenInputSendButton = styled.button`
 `;
 
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
-  const { chatRooms, addChatRoom } = useChatRoomsStore();
+  const chatRooms = [];
   const [selectedChatRoomId, setSelectedChatRoomId] = useState(0);
 
   const handleSendChat = async () => {
     const inputValue = document.getElementById("content-input").value;
-    if (selectedChatRoomId === 0) {
-      const { chatRoomId, createAt } = await createChatRoom();
-      addChatRoom({ chatRoomId, createAt });
-      setSelectedChatRoomId(chatRoomId);
-      sendChat(chatRoomId, inputValue);
-    } else {
-      sendChat(selectedChatRoomId, inputValue);
-    }
+    console.log(inputValue);
   };
 
   return (
@@ -185,23 +177,6 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           </ChatScreenHeader>
           <ChatScreenInner>
             <ChatHistoriesContainer>
-              <ChatHistoryDiv
-                id={0}
-                key={0}
-                onClick={(event) => {
-                  if (selectedChatRoomId !== null) {
-                    const pastSelectedChatRoomDiv =
-                      document.getElementById(selectedChatRoomId);
-                    pastSelectedChatRoomDiv.style.backgroundColor = "";
-                  }
-
-                  setSelectedChatRoomId(0);
-                  event.target.style.backgroundColor = "#f1e58c";
-                }}
-                style={{ backgroundColor: "#f1e58c" }}
-              >
-                새로운 대화
-              </ChatHistoryDiv>
               {[...chatRooms].reverse().map((chatRoom, index) => (
                 <ChatHistoryDiv
                   id={chatRoom.id}
