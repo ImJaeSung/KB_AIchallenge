@@ -3,7 +3,12 @@ import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
 import { useEffect, useState } from "react";
 import ChatContents from "./ChatContents.tsx";
-import { createChatRoom, getChatsByChatRoomId, sendChat } from "shared/api";
+import {
+  createChatRoom,
+  getChatRooms,
+  getChatsByChatRoomId,
+  sendChat,
+} from "shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -154,6 +159,20 @@ export default function ChatScreen({
   chats,
   setChats,
 }) {
+  const handleChatHistoryClick = async (event) => {
+    if (selectedChatRoomId) {
+      const pastSelectedChatRoomDiv =
+        document.getElementById(selectedChatRoomId);
+      pastSelectedChatRoomDiv.style.backgroundColor = "";
+    }
+
+    setSelectedChatRoomId(event.target.id);
+    event.target.style.backgroundColor = "#f1e58c";
+
+    const chats = await getChatsByChatRoomId(event.id);
+    setChats(chats);
+  };
+
   const handleSendChat = async () => {
     const inputDoc = document.getElementById("content-input");
     if (inputDoc.value === "") {
@@ -201,15 +220,15 @@ export default function ChatScreen({
   };
 
   useEffect(() => {
-    if (selectedChatRoomId !== null) {
-      const getChatsAndSet = async () => {
-        const chatData = await getChatsByChatRoomId(selectedChatRoomId);
-        setChats(chatData);
-      };
+    const getChatsAndSet = async () => {
+      const chatData = await getChatsByChatRoomId(selectedChatRoomId);
+      setChats(chatData);
+    };
 
+    if (selectedChatRoomId !== null) {
       getChatsAndSet();
     }
-  }, [selectedChatRoomId]);
+  }, [chats]);
 
   return (
     <>
@@ -239,16 +258,7 @@ export default function ChatScreen({
                 <ChatHistoryDiv
                   id={chatRoom.id}
                   key={chatRoom.id}
-                  onClick={(event) => {
-                    if (selectedChatRoomId) {
-                      const pastSelectedChatRoomDiv =
-                        document.getElementById(selectedChatRoomId);
-                      pastSelectedChatRoomDiv.style.backgroundColor = "";
-                    }
-
-                    setSelectedChatRoomId(chatRoom.id);
-                    event.target.style.backgroundColor = "#f1e58c";
-                  }}
+                  onClick={handleChatHistoryClick}
                 >
                   {chatRooms.length - index}번째 대화
                 </ChatHistoryDiv>
