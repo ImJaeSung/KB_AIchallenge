@@ -6,9 +6,9 @@ import securities from "assets/home/securities.png";
 import apps from "assets/home/apps.png";
 import footer from "assets/home/footer.png";
 import chatbot from "assets/home/chatbot.png";
-import { useMemberStore } from "shared/store";
+import { useChatRoomsStore, useMemberStore } from "shared/store";
 import { useEffect, useState } from "react";
-import { getMemberInfo } from "../../shared/api";
+import { getChatRooms, getMemberInfo } from "shared/api";
 import ChatScreen from "./ChatScreen.tsx";
 
 const HomePageContainer = styled.div`
@@ -81,6 +81,7 @@ const HomeImage = styled.img`
 export default function HomePage() {
   const [isChatScreenOpen, setIsChatScreenOpen] = useState(false);
   const { setMember, setIsLoading } = useMemberStore();
+  const { setChatRooms } = useChatRoomsStore();
 
   useEffect(() => {
     const getMemberInfoAndSet = async () => {
@@ -97,7 +98,13 @@ export default function HomePage() {
       return;
     }
 
+    const getChatRoomsAndSet = async () => {
+      const chatRoomsData = await getChatRooms();
+      setChatRooms(chatRoomsData);
+    };
+
     getMemberInfoAndSet();
+    getChatRoomsAndSet();
   }, []);
 
   return (

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
 import { useState } from "react";
+import { useChatRoomsStore } from "../../shared/store";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -174,6 +175,8 @@ const ChatScreenInputSendButton = styled.button`
 `;
 
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
+  const { chatRooms } = useChatRoomsStore();
+
   return (
     <>
       {isChatScreenOpen ? (
@@ -198,123 +201,14 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           </ChatScreenHeader>
           <ChatScreenInner>
             <ChatHistoriesContainer>
-              <ChatHistoryDiv>ㅋㅋ</ChatHistoryDiv>
-              <ChatHistoryDiv>ㅋㅋ</ChatHistoryDiv>
-              <ChatHistoryDiv>ㅋㅋ</ChatHistoryDiv>
+              {[...chatRooms].reverse().map((chatRoom, index) => (
+                <ChatHistoryDiv key={chatRoom.id}>
+                  {chatRooms.length - index}번째 대화
+                </ChatHistoryDiv>
+              ))}
             </ChatHistoriesContainer>
             <ChatScreenContainer>
-              <ChatScreenContentContainer>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={true}>
-                  <ChatScreenContent $isUser={true}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-                <ChatScreenContentDiv $isUser={false}>
-                  <ChatScreenContent $isUser={false}>
-                    안녕하세요
-                  </ChatScreenContent>
-                </ChatScreenContentDiv>
-              </ChatScreenContentContainer>
+              <ChatScreenContentContainer></ChatScreenContentContainer>
               <ChatScreenContentInputContainer>
                 <ChatScreenContentInput placeholder="금융의 뜻이 뭐야?" />
                 <ChatScreenInputSendButton>

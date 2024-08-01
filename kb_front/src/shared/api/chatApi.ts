@@ -17,7 +17,7 @@ export const getChatRooms = async () => {
     });
 
   if (!response) {
-    return null;
+    return [];
   }
 
   const chatRooms = response.map((chatRoom) => {
