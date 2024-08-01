@@ -161,6 +161,16 @@ export default function ChatScreen({
 
     if (selectedChatRoomId === null) {
       const { chatRoomId, createdAt } = await createChatRoom();
+      setChats([
+        ...chats,
+        {
+          id: "",
+          isAiResponse: false,
+          content: inputDoc.value,
+          createdAt: new Date(),
+        },
+      ]);
+
       const { userChat, aiChat } = await sendChat(chatRoomId, inputDoc.value);
       const newChatRoom = {
         id: chatRoomId,
@@ -171,6 +181,15 @@ export default function ChatScreen({
       setChats([...chats, userChat, aiChat]);
       inputDoc.value = "";
     } else {
+      setChats([
+        ...chats,
+        {
+          id: "",
+          isAiResponse: false,
+          content: inputDoc.value,
+          createdAt: new Date(),
+        },
+      ]);
       const { userChat, aiChat } = await sendChat(
         selectedChatRoomId,
         inputDoc.value,
