@@ -149,10 +149,11 @@ export default function ChatScreen({
   setIsChatScreenOpen,
   chatRooms,
   setChatRooms,
+  selectedChatRoomId,
+  setSelectedChatRoomId,
+  chats,
+  setChats,
 }) {
-  const [selectedChatRoomId, setSelectedChatRoomId] = useState(null);
-  const [chats, setChats] = useState([]);
-
   const handleSendChat = async () => {
     const inputDoc = document.getElementById("content-input");
     if (inputDoc.value === "") {
@@ -239,7 +240,7 @@ export default function ChatScreen({
                   id={chatRoom.id}
                   key={chatRoom.id}
                   onClick={(event) => {
-                    if (selectedChatRoomId !== null) {
+                    if (selectedChatRoomId) {
                       const pastSelectedChatRoomDiv =
                         document.getElementById(selectedChatRoomId);
                       pastSelectedChatRoomDiv.style.backgroundColor = "";
