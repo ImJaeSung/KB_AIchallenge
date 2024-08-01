@@ -34,29 +34,35 @@ def getChatRoom(request: Request, chatRoomId: str):
 @router.post("/send")
 def createChat(request: Request, sendChatRequest: SendChatRequest):
     getMemberIdFromAccessToken(request)
+    userSendTime = datetime.now()
     userChatId = esClient.index(index="chats", body={
         "chatRoomId": sendChatRequest.chatRoomId,
         "isAiResponse": False,
         "content": sendChatRequest.content,
-        "createdAt": datetime.now()
+        "createdAt": userSendTime
     })["_id"]
 
     # TODO: ai 답변 생성하는 로직 추가
     aiResponse = "AI Response"
+    aiResponseTime = datetime.now()
     aiChatId = esClient.index(index="chats", body={
         "chatRoomId": sendChatRequest.chatRoomId,
         "isAiResponse": True,
         "content": aiResponse,
-        "createdAt": datetime.now()
+        "createdAt": aiResponseTime
     })["_id"]
 
     return {
         "userChat": {
             "id": userChatId,
-            "content": sendChatRequest.content
+            "content": sendChatRequest.content,
+            "isAiResponse": False,
+            "createdAt": userSendTime
         },
         "aiChat": {
             "id": aiChatId,
-            "content": aiResponse
+            "content": aiResponse,
+            "isAiResponse": True,
+            "createdAt": aiResponseTime
         }
     }
