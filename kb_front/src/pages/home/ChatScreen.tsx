@@ -1,14 +1,9 @@
 import styled from "styled-components";
 import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ChatContents from "./ChatContents.tsx";
-import {
-  createChatRoom,
-  getChatRooms,
-  getChatsByChatRoomId,
-  sendChat,
-} from "shared/api";
+import { createChatRoom, getChatsByChatRoomId, sendChat } from "shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -181,15 +176,6 @@ export default function ChatScreen({
 
     if (selectedChatRoomId === null) {
       const { chatRoomId, createdAt } = await createChatRoom();
-      setChats([
-        ...chats,
-        {
-          id: "",
-          isAiResponse: false,
-          content: inputDoc.value,
-          createdAt: new Date(),
-        },
-      ]);
 
       const { userChat, aiChat } = await sendChat(chatRoomId, inputDoc.value);
       const newChatRoom = {
@@ -198,18 +184,9 @@ export default function ChatScreen({
       };
       setChatRooms([...chatRooms, newChatRoom]);
       setSelectedChatRoomId(chatRoomId);
-      setChats([...chats, userChat, aiChat]);
+      setChats([]);
       inputDoc.value = "";
     } else {
-      setChats([
-        ...chats,
-        {
-          id: "",
-          isAiResponse: false,
-          content: inputDoc.value,
-          createdAt: new Date(),
-        },
-      ]);
       const { userChat, aiChat } = await sendChat(
         selectedChatRoomId,
         inputDoc.value,
@@ -226,9 +203,13 @@ export default function ChatScreen({
     };
 
     if (selectedChatRoomId !== null) {
+      const selectedChatRoomDiv = document.getElementById(selectedChatRoomId);
+      if (selectedChatRoomDiv) {
+        selectedChatRoomDiv.style.backgroundColor = "#f1e58c";
+      }
       getChatsAndSet();
     }
-  }, [chats]);
+  }, [setSelectedChatRoomId, chats]);
 
   return (
     <>
@@ -253,7 +234,7 @@ export default function ChatScreen({
             </ChatScreenHeaderButtons>
           </ChatScreenHeader>
           <ChatScreenInner>
-            <ChatHistoriesContainer>
+            <ChatHistoriesContainer id="chat-histories-container">
               {[...chatRooms].reverse().map((chatRoom, index) => (
                 <ChatHistoryDiv
                   id={chatRoom.id}
