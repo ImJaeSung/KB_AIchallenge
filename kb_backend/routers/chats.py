@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request
 from utils.authUtil import *
 from db.elasticsearchClient import *
+from datetime import datetime
 
 router = APIRouter()
 
@@ -14,9 +15,9 @@ def getChatRooms(request: Request):
 
 @router.post("")
 def createChatRoom(request: Request):
-    member = getMemberFromAccessToken(request)
+    memberId = getMemberIdFromAccessToken(request)
     chatRoomId = esClient.index(index="chatrooms", body={
-        "membersId": [member[0]["_id"]],
+        "memberId": memberId,
         "createdAt": datetime.now()
     })["_id"]
     return {"chatRoomId": chatRoomId}

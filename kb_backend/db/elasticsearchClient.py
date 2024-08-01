@@ -37,15 +37,19 @@ def findMemberByEmail(email):
 
 
 def findChatRoomsByMemberId(memberId):
-    searchResult = esClient.search(
-        index="chatrooms",
-        body={
-            "query": {
-                "terms": {
-                    "membersId": [memberId]
+    try:
+        searchResult = esClient.search(
+            index="chatrooms",
+            body={
+                "query": {
+                    "match": {
+                        "memberId": memberId
+                    }
                 }
             }
-        }
-    )
+        )
 
-    return searchResult["hits"]["hits"]
+        return searchResult["hits"]["hits"]
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return []
