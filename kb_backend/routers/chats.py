@@ -21,7 +21,7 @@ def createChatRoom(request: Request):
     chatRoomId = esClient.index(index="chatrooms", body={
         "memberId": memberId,
         "createdAt": createTime
-    })["_id"]
+    })["_id"].encode("utf-8")
     return {
         "chatRoomId": chatRoomId,
         "createdAt": createTime
@@ -44,7 +44,7 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
         "isAiResponse": False,
         "content": sendChatRequest.content,
         "createdAt": userSendTime
-    })["_id"]
+    })["_id"].encode("utf-8")
 
     # TODO: ai 답변 생성하는 로직 추가
     aiResponse = "AI Response"
@@ -54,7 +54,7 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
         "isAiResponse": True,
         "content": aiResponse,
         "createdAt": aiResponseTime
-    })["_id"]
+    })["_id"].encode("utf-8")
 
     return {
         "userChat": {
