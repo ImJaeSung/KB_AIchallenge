@@ -144,73 +144,8 @@ const ChatScreenInputSendButton = styled.button`
   }
 `;
 
-export default function ChatScreen({
-  isChatScreenOpen,
-  setIsChatScreenOpen,
-  chatRooms,
-  setChatRooms,
-  selectedChatRoomId,
-  setSelectedChatRoomId,
-  chats,
-  setChats,
-}) {
-  const handleChatHistoryClick = async (event) => {
-    if (selectedChatRoomId) {
-      const pastSelectedChatRoomDiv =
-        document.getElementById(selectedChatRoomId);
-      pastSelectedChatRoomDiv.style.backgroundColor = "";
-    }
-
-    setSelectedChatRoomId(event.target.id);
-    event.target.style.backgroundColor = "#f1e58c";
-
-    const chats = await getChatsByChatRoomId(event.id);
-    setChats(chats);
-  };
-
-  const handleSendChat = async () => {
-    const inputDoc = document.getElementById("content-input");
-    if (inputDoc.value === "") {
-      return;
-    }
-
-    if (selectedChatRoomId === null) {
-      const { chatRoomId, createdAt } = await createChatRoom();
-
-      const { userChat, aiChat } = await sendChat(chatRoomId, inputDoc.value);
-      const newChatRoom = {
-        id: chatRoomId,
-        createdAt,
-      };
-      setChatRooms([...chatRooms, newChatRoom]);
-      setSelectedChatRoomId(chatRoomId);
-      setChats([]);
-      inputDoc.value = "";
-    } else {
-      const { userChat, aiChat } = await sendChat(
-        selectedChatRoomId,
-        inputDoc.value,
-      );
-      setChats([...chats, userChat, aiChat]);
-      inputDoc.value = "";
-    }
-  };
-
-  useEffect(() => {
-    const getChatsAndSet = async () => {
-      const chatData = await getChatsByChatRoomId(selectedChatRoomId);
-      setChats(chatData);
-    };
-
-    if (selectedChatRoomId !== null) {
-      const selectedChatRoomDiv = document.getElementById(selectedChatRoomId);
-      if (selectedChatRoomDiv) {
-        selectedChatRoomDiv.style.backgroundColor = "#f1e58c";
-      }
-      getChatsAndSet();
-    }
-  }, [setSelectedChatRoomId, chats]);
-
+export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
+  const chatRooms = [];
   return (
     <>
       {isChatScreenOpen ? (
@@ -236,26 +171,19 @@ export default function ChatScreen({
           <ChatScreenInner>
             <ChatHistoriesContainer id="chat-histories-container">
               {[...chatRooms].reverse().map((chatRoom, index) => (
-                <ChatHistoryDiv
-                  id={chatRoom.id}
-                  key={chatRoom.id}
-                  onClick={handleChatHistoryClick}
-                >
+                <ChatHistoryDiv id={chatRoom.id} key={chatRoom.id}>
                   {chatRooms.length - index}번째 대화
                 </ChatHistoryDiv>
               ))}
             </ChatHistoriesContainer>
             <ChatScreenContainer>
-              <ChatContents
-                selectedChatRoomId={selectedChatRoomId}
-                chats={chats}
-              />
+              <ChatContents />
               <ChatScreenContentInputContainer>
                 <ChatScreenContentInput
                   placeholder="금융의 뜻이 뭐야?"
                   id="content-input"
                 />
-                <ChatScreenInputSendButton onClick={handleSendChat}>
+                <ChatScreenInputSendButton>
                   <img src={send} />
                 </ChatScreenInputSendButton>
               </ChatScreenContentInputContainer>

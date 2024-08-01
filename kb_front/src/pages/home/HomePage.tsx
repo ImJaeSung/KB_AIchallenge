@@ -79,10 +79,7 @@ const HomeImage = styled.img`
 `;
 
 export default function HomePage() {
-  const [selectedChatRoomId, setSelectedChatRoomId] = useState(null);
-  const [chats, setChats] = useState([]);
   const [isChatScreenOpen, setIsChatScreenOpen] = useState(false);
-  const [chatRooms, setChatRooms] = useState([]);
   const { setMember, setIsLoading } = useMemberStore();
 
   useEffect(() => {
@@ -100,13 +97,7 @@ export default function HomePage() {
       return;
     }
 
-    const getChatRoomsAndSet = async () => {
-      const chatRoomsData = await getChatRooms();
-      setChatRooms(chatRoomsData);
-    };
-
     getMemberInfoAndSet();
-    getChatRoomsAndSet();
   }, []);
 
   return (
@@ -115,8 +106,6 @@ export default function HomePage() {
         <ChatBotButton
           onClick={() => {
             setIsChatScreenOpen(!isChatScreenOpen);
-            setSelectedChatRoomId(null);
-            setChats([]);
           }}
         >
           <img src={chatbot} />
@@ -132,12 +121,6 @@ export default function HomePage() {
       <ChatScreen
         isChatScreenOpen={isChatScreenOpen}
         setIsChatScreenOpen={setIsChatScreenOpen}
-        chatRooms={chatRooms}
-        setChatRooms={setChatRooms}
-        selectedChatRoomId={selectedChatRoomId}
-        setSelectedChatRoomId={setSelectedChatRoomId}
-        chats={chats}
-        setChats={setChats}
       />
     </HomePageContainer>
   );

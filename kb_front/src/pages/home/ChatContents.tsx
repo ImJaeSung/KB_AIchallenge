@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getChatsByChatRoomId } from "shared/api";
+import { Simulate } from "react-dom/test-utils";
+import change = Simulate.change;
 
 interface Chat {
   id: number;
@@ -40,7 +42,10 @@ const ChatScreenContent = styled.p<{
   max-width: 70%;
 `;
 
-export default function ChatContents({ selectedChatRoomId, chats }) {
+export default function ChatContents() {
+  const selectedChatRoomId = 1;
+  const chats = [];
+
   return (
     <ChatScreenContentContainer>
       {selectedChatRoomId ? (
