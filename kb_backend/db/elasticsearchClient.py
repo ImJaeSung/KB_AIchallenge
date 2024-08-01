@@ -34,3 +34,18 @@ def findMemberByEmail(email):
     )
 
     return searchResult["hits"]["hits"]
+
+
+def findChatRoomsByMemberId(memberId):
+    searchResult = esClient.search(
+        index="chatrooms",
+        body={
+            "query": {
+                "terms": {
+                    "membersId": [memberId]
+                }
+            }
+        }
+    )
+
+    return searchResult["hits"]["hits"]

@@ -1,8 +1,20 @@
+from fastapi import Request
 import jwt
 import datetime
 from db.redisClient import redisClient
 
 secretKey = "2uaI22VtQR3GLebHv6q52MrH3VLcocXd"
+
+
+def getMemberIdFromAccessToken(request: Request):
+    accessToken = request.headers["Authorization"].split(" ")[1]
+    if not validateAccessToken(accessToken):
+        return {"message": "Invalid Access Token"}
+    memberEmail = getMemberEmailFromAccessToken(accessToken)
+    member = findMemberByEmail(memberEmail)
+    if len(member) == 0 or member is None or len(member) > 1:
+        raise Exception("Invalid Member")
+    return member[0]["_id"]
 
 
 def createAccessToken(memberEmail):
