@@ -3,6 +3,7 @@ import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
 import { useState } from "react";
 import { useChatRoomsStore } from "../../shared/store";
+import ChatContents from "./ChatContents.tsx";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -95,37 +96,6 @@ const ChatScreenCloseButton = styled.button`
   cursor: pointer;
 `;
 
-const ChatScreenContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 95%;
-  overflow-y: auto;
-  color: #000;
-  padding: 10px; /* 컨테이너의 패딩 추가 */
-`;
-
-const ChatScreenContentDiv = styled.div<{
-  $isUser: boolean;
-}>`
-  display: inline-flex; /* inline-flex로 설정하여 너비가 콘텐츠에 맞게 조정되도록 함 */
-  justify-content: ${(props) => (props.$isUser ? "flex-end" : "flex-start")};
-  margin: 5px 0;
-  padding: 5px;
-  width: auto;
-`;
-
-const ChatScreenContent = styled.p<{
-  $isUser: boolean;
-}>`
-  background-color: ${(props) =>
-    props.$isUser ? "rgba(238, 238, 174, 0.8)" : "#f9f0b4"};
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  font-size: 20px;
-  padding: 10px;
-  max-width: 70%;
-`;
-
 const ChatScreenContentInputContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -176,6 +146,7 @@ const ChatScreenInputSendButton = styled.button`
 
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
   const { chatRooms } = useChatRoomsStore();
+  const [selectedChatRoomId, setSelectedChatRoomId] = useState(null);
 
   return (
     <>
@@ -202,13 +173,26 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           <ChatScreenInner>
             <ChatHistoriesContainer>
               {[...chatRooms].reverse().map((chatRoom, index) => (
-                <ChatHistoryDiv key={chatRoom.id}>
+                <ChatHistoryDiv
+                  id={chatRoom.id}
+                  key={chatRoom.id}
+                  onClick={(event) => {
+                    if (selectedChatRoomId !== null) {
+                      const pastSelectedChatRoomDiv =
+                        document.getElementById(selectedChatRoomId);
+                      pastSelectedChatRoomDiv.style.backgroundColor = "";
+                    }
+
+                    setSelectedChatRoomId(chatRoom.id);
+                    event.target.style.backgroundColor = "#f1e58c";
+                  }}
+                >
                   {chatRooms.length - index}번째 대화
                 </ChatHistoryDiv>
               ))}
             </ChatHistoriesContainer>
             <ChatScreenContainer>
-              <ChatScreenContentContainer></ChatScreenContentContainer>
+              <ChatContents selectedChatRoomId={selectedChatRoomId} />
               <ChatScreenContentInputContainer>
                 <ChatScreenContentInput placeholder="금융의 뜻이 뭐야?" />
                 <ChatScreenInputSendButton>
