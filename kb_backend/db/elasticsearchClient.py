@@ -68,7 +68,19 @@ def findChatsByChatRoomId(chatRoomId):
             }
         )
 
-        return searchResult["hits"]["hits"]
+        result = []
+
+        for item in searchResult["hits"]["hits"]:
+            source = item["_source"]
+            chat_data = {
+                "id": item["_id"],
+                "isAiResponse": source["isAiResponse"],
+                "content": source["content"],
+                "createdAt": source["createdAt"]
+            }
+            result.append(chat_data)
+
+        return result
     except Exception as e:
         print(f"Error: {str(e)}")
         return []
