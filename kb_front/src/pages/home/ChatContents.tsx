@@ -1,4 +1,13 @@
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { getChatsByChatRoomId } from "../../shared/api";
+
+interface Chat {
+  id: number;
+  isAiResponse: boolean;
+  content: string;
+  createdAt: Date;
+}
 
 const ChatScreenContentContainer = styled.div`
   display: flex;
@@ -32,9 +41,32 @@ const ChatScreenContent = styled.p<{
 `;
 
 export default function ChatContents({ selectedChatRoomId }) {
+  const [chats, setChats] = useState<Chat[]>([]);
+
+  useEffect(() => {
+    const getChatsAndSet = async () => {
+      if (selectedChatRoomId) {
+        const findChats = await getChatsByChatRoomId(selectedChatRoomId);
+        setChats(chats);
+      }
+    };
+
+    getChatsAndSet();
+  }, [selectedChatRoomId]);
+
   return (
     <ChatScreenContentContainer>
-      {selectedChatRoomId ? <></> : null}
+      {selectedChatRoomId ? (
+        <>
+          {chats.map((chat) => (
+            <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
+              <ChatScreenContent $isUser={!chat.isAiResponse}>
+                {chat.content}
+              </ChatScreenContent>
+            </ChatScreenContentDiv>
+          ))}
+        </>
+      ) : null}
     </ChatScreenContentContainer>
   );
 }
