@@ -53,3 +53,22 @@ def findChatRoomsByMemberId(memberId):
     except Exception as e:
         print(f"Error: {str(e)}")
         return []
+
+
+def findChatsByChatRoomId(chatRoomId):
+    try:
+        searchResult = esClient.search(
+            index="chats",
+            body={
+                "query": {
+                    "match": {
+                        "chatRoomId": chatRoomId
+                    }
+                }
+            }
+        )
+
+        return searchResult["hits"]["hits"]
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return []
