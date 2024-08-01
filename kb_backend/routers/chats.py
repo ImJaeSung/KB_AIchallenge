@@ -17,11 +17,15 @@ def getChatRooms(request: Request):
 @router.post("")
 def createChatRoom(request: Request):
     memberId = getMemberIdFromAccessToken(request)
+    createTime = datetime.now()
     chatRoomId = esClient.index(index="chatrooms", body={
         "memberId": memberId,
-        "createdAt": datetime.now()
+        "createdAt": createTime
     })["_id"]
-    return {"chatRoomId": chatRoomId}
+    return {
+        "chatRoomId": chatRoomId,
+        "createdAt": createTime
+    }
 
 
 @router.get("/{chatRoomId}")

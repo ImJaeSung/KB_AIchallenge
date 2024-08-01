@@ -75,7 +75,7 @@ export const sendChat = async (chatRoomId: string, content: string) => {
     return null;
   }
 
-  return await fetch(`http://localhost:8000/chats/${chatRoomId}`, {
+  return await fetch(`http://localhost:8000/chats/send`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
