@@ -56,6 +56,7 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
         "createdAt": aiResponseTime
     })["_id"].encode("utf-8")
 
+    esClient.indices.refresh(index="chats")
     return {
         "userChat": {
             "id": userChatId,
