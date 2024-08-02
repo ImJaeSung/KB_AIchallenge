@@ -2,6 +2,9 @@ import styled from "styled-components";
 import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
 import ChatContents from "./ChatContents.tsx";
+import { useChatRoomsStore, useChatsStore } from "shared/store";
+import { useEffect, useState } from "react";
+import { getChatsByChatRoomId } from "../../shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -143,7 +146,22 @@ const ChatScreenInputSendButton = styled.button`
 `;
 
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
-  const chatRooms = [];
+  const [selectedChatRoom, setSelectedChatRoom] = useState<string | null>(null);
+  const { chatRooms } = useChatRoomsStore();
+  const { setChats } = useChatsStore();
+
+  useEffect(() => {
+    const getChatsAndSet = async () => {
+      const findChats = await getChatsByChatRoomId(selectedChatRoom);
+      console.log(findChats);
+      setChats(findChats);
+    };
+
+    if (selectedChatRoom) {
+      getChatsAndSet();
+    }
+  }, [selectedChatRoom]);
+
   return (
     <>
       {isChatScreenOpen ? (
