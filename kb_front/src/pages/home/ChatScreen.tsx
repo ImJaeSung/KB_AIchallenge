@@ -8,7 +8,7 @@ import {
   useSelectedRoomStore,
 } from "shared/store";
 import { useEffect } from "react";
-import { getChatsByChatRoomId, sendChat } from "shared/api";
+import { createChatRoom, getChatsByChatRoomId, sendChat } from "shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -151,13 +151,12 @@ const ChatScreenInputSendButton = styled.button`
 
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
   const { selectedRoomId, setSelectedRoom } = useSelectedRoomStore();
-  const { chatRooms } = useChatRoomsStore();
+  const { chatRooms, addChatRoom } = useChatRoomsStore();
   const { chats, setChats, addChat } = useChatsStore();
 
   useEffect(() => {
     const getChatsAndSet = async () => {
       const findChats = await getChatsByChatRoomId(selectedRoomId);
-      console.log(findChats);
       setChats(findChats);
     };
 
@@ -174,16 +173,25 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
       return;
     }
 
-    const chat = {
-      id: chats.length + 1,
-      isAiResponse: false,
-      content: inputDoc.value,
-      createdAt: new Date(),
-    };
-    addChat(chat);
+    if (selectedRoomId) {
+      const chat = {
+        id: chats.length + 1,
+        isAiResponse: false,
+        content: inputDoc.value,
+        createdAt: new Date(),
+      };
+      addChat(chat);
 
-    const { userChat, aiChat } = await sendChat(selectedRoomId, inputDoc.value);
-    setChats([...chats, userChat, aiChat]);
+      const { userChat, aiChat } = await sendChat(
+        selectedRoomId,
+        inputDoc.value,
+      );
+      setChats([...chats, userChat, aiChat]);
+    } else {
+      const { chatRoomId, createdAt } = await createChatRoom();
+      addChatRoom({ id: chatRoomId, createdAt });
+      setSelectedRoom(chatRoomId);
+    }
     inputDoc.value = "";
   };
 
