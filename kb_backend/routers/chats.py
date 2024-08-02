@@ -71,3 +71,13 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
             "createdAt": aiResponseTime
         }
     }
+
+@router.post("/send-noAuth")
+def createChatNoAuth(sendChatRequest: SendNoAuthChatRequest):
+    content = sendChatRequest.content
+    aiResponse = "AI Response"
+    return {
+        "content": aiResponse,
+        "isAiResponse": True,
+        "createdAt": datetime.now()
+    }
