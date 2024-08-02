@@ -191,6 +191,16 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
       const { chatRoomId, createdAt } = await createChatRoom();
       addChatRoom({ id: chatRoomId, createdAt });
       setSelectedRoom(chatRoomId);
+
+      const chat = {
+        id: chats.length + 1,
+        isAiResponse: false,
+        content: inputDoc.value,
+        createdAt: new Date(),
+      };
+      addChat(chat);
+
+      sendChat(chatRoomId, inputDoc.value);
     }
     inputDoc.value = "";
   };

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useChatsStore, useSelectedRoomStore } from "shared/store";
+import { useEffect, useState } from "react";
 
 interface Chat {
   id: number;
@@ -42,20 +43,21 @@ const ChatScreenContent = styled.p<{
 export default function ChatContents() {
   const { selectedRoomId } = useSelectedRoomStore();
   const { chats } = useChatsStore();
+  const [chatElements, setChatElements] = useState([]);
+
+  useEffect(() => {
+    setChatElements(
+      chats.map((chat) => (
+        <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
+          <ChatScreenContent $isUser={!chat.isAiResponse}>
+            {chat.content}
+          </ChatScreenContent>
+        </ChatScreenContentDiv>
+      )),
+    );
+  }, [chats]);
 
   return (
-    <ChatScreenContentContainer>
-      {selectedRoomId ? (
-        <>
-          {chats.map((chat) => (
-            <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
-              <ChatScreenContent $isUser={!chat.isAiResponse}>
-                {chat.content}
-              </ChatScreenContent>
-            </ChatScreenContentDiv>
-          ))}
-        </>
-      ) : null}
-    </ChatScreenContentContainer>
+    <ChatScreenContentContainer>{chatElements}</ChatScreenContentContainer>
   );
 }
