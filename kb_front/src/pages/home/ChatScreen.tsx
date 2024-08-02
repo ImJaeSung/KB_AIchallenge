@@ -163,6 +163,26 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
   const { member } = useMemberStore();
 
   useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        setIsChatScreenOpen(false);
+        setSelectedRoom(null);
+        setChats([]);
+      }
+    };
+
+    if (isChatScreenOpen) {
+      window.addEventListener("keydown", handleEsc);
+    } else {
+      window.removeEventListener("keydown", handleEsc);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [isChatScreenOpen, setIsChatScreenOpen]);
+
+  useEffect(() => {
     const getChatsAndSet = async () => {
       if (member) {
         const findChats = await getChatsByChatRoomId(selectedRoomId);
