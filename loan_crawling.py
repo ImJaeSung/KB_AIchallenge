@@ -33,7 +33,7 @@ for loan_name, page_value in loan_data:
     driver.get(f'https://obank.kbstar.com/quics?page={page_value}')
     time.sleep(2)  # wait for the page to load
     # for page in range(1, 3):
-    for j in range(2, 8):
+    for j in range(2, 10):
         elements = driver.find_elements(
             By.CSS_SELECTOR, 'ul.list-product1 > li > div > a'
         )
@@ -48,34 +48,64 @@ for loan_name, page_value in loan_data:
                 print(f"An error occurred at index {i}: {e}")
                     # Try to locate the next page button and click it
         try:
+            if loan_name == '신용대출':
+                path = f'/html/body/div[1]/div[3]/div[2]/div[6]/div[2]/div/div/form[{j}]/span'
+            elif loan_name == '담보대출':
+                path = f'/html/body/div[1]/div[3]/div[2]/div[5]/div[2]/div/div/form[{j}]/span'
+            elif loan_name == '전월세/반환보증':
+                path = f'/html/body/div[1]/div[3]/div[2]/div[5]/div[2]/div/div/form[{j}]/span'
+            elif loan_name == '자동차대출': 
+                path = None
+            elif loan_name == '집단중도금/이주비대출':
+                path = None
+            elif loan_name == '주택도시기금대출':
+                path = f'/html/body/div[1]/div[3]/div[2]/div[6]/div[2]/div/div/form[{j}]/span'
             next_page_button = wait.until(
                 EC.presence_of_element_located(
-                    (By.XPATH, 
-                    f'/html/body/div[1]/div[3]/div[2]/div[6]/div[2]/div/div/form[j]/span'
-                    )
+                    (By.XPATH, path)
                 )
             )
             next_page_button.click()
             time.sleep(2)  # wait for the new page to load
         except Exception as e:
             print("No more pages or an error occurred:", e)
-    
-
-    #%%
+#%%
+unique_codes = list(set(codes))
+len(unique_codes)
+#%%
 loan_products = []
-for loan_name, code in codes:
+for loan_name, code in unique_codes:
     word_address = f'https://obank.kbstar.com/quics?page=C103429&cc=b104363:b104516&isNew=N&prcode={code}&QSL=F'
     driver.get(word_address)
     time.sleep(2)  # wait for the page to load
 
     try:
-        name = driver.find_element(By.CSS_SELECTOR, 'h1[style="display: none;"]').text
-        feature = driver.find_element(By.XPATH, "//strong[text()='상품특징']/following-sibling::div[@class='infoCont']").text
-        feature = re.sub("\n", "", feature)
-        loan_products.append((loan_name, name, feature))
+        if loan_name == '신용대출':
+            path = '/html/body/div[1]/div[3]/div[2]/div[6]'
+        elif loan_name == '담보대출':
+            path = '/html/body/div[1]/div[3]/div[2]/div[5]'
+        elif loan_name == '전월세/반환보증':
+            path = '/html/body/div[1]/div[3]/div[2]/div[5]'
+        elif loan_name == '자동차대출': 
+            path = '/html/body/div[1]/div[3]/div[2]/div[6]'
+        elif loan_name == '집단중도금/이주비대출':
+            path = '/html/body/div[1]/div[3]/div[2]/div[5]'
+        elif loan_name == '주택도시기금대출':
+            path = '/html/body/div[1]/div[3]/div[2]/div[6]'
+    
+        name = driver.find_element(By.XPATH, f'{path}/div/div[1]/h2/b').text
+        feature_1 = driver.find_element(By.XPATH, f'{path}/div/div[3]/div/ul/li[1]/div/ul').text
+        feature_1 = re.sub("\n", "", feature_1)
+        
+        
+        feature_2= driver.find_element(By.XPATH, f'{path}/div/div[3]/div/ul/li[2]/div/ul').text
+        feature_2 = re.sub("\n", "", feature_2)
+    
+        loan_products.append((loan_name, name, feature_1, feature_2))
     except Exception as e:
         print(f"An error occurred while fetching product details: {e}")
 #%%
+len(loan_products)
 # Close the WebDriver
 driver.quit()
 #%%
