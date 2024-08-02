@@ -162,6 +162,8 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
     };
 
     if (selectedRoomId) {
+      const selectedChatRoom = document.getElementById(selectedRoomId);
+      selectedChatRoom.style.backgroundColor = "#f1e58c";
       getChatsAndSet();
     }
   }, [selectedRoomId]);
@@ -191,7 +193,6 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
       pastSelectedChatRoom.style.backgroundColor = "transparent";
     }
 
-    event.target.style.backgroundColor = "#f1e58c";
     const chatRoomId = event.target.id;
     setSelectedRoom(chatRoomId);
   };
