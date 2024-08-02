@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useChatsStore, useSelectedRoomStore } from "shared/store";
 
 interface Chat {
   id: number;
@@ -39,12 +40,12 @@ const ChatScreenContent = styled.p<{
 `;
 
 export default function ChatContents() {
-  const selectedChatRoomId = 1;
-  const chats = [];
+  const { selectedRoomId } = useSelectedRoomStore();
+  const { chats } = useChatsStore();
 
   return (
     <ChatScreenContentContainer>
-      {selectedChatRoomId ? (
+      {selectedRoomId ? (
         <>
           {chats.map((chat) => (
             <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
