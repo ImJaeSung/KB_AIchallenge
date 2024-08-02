@@ -230,6 +230,8 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
               <ChatScreenCloseButton
                 onClick={() => {
                   setIsChatScreenOpen(false);
+                  setSelectedRoom(null);
+                  setChats([]);
                 }}
               >
                 X
