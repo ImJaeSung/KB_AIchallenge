@@ -7,8 +7,8 @@ import {
   useChatsStore,
   useSelectedRoomStore,
 } from "shared/store";
-import { useEffect, useState } from "react";
-import { getChatsByChatRoomId } from "../../shared/api";
+import { useEffect } from "react";
+import { getChatsByChatRoomId, sendChat } from "shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -152,7 +152,7 @@ const ChatScreenInputSendButton = styled.button`
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
   const { selectedRoomId, setSelectedRoom } = useSelectedRoomStore();
   const { chatRooms } = useChatRoomsStore();
-  const { setChats } = useChatsStore();
+  const { chats, setChats, addChat } = useChatsStore();
 
   useEffect(() => {
     const getChatsAndSet = async () => {
@@ -165,6 +165,25 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
       getChatsAndSet();
     }
   }, [selectedRoomId]);
+
+  const handleSendChat = async () => {
+    const inputDoc = document.getElementById("content-input");
+    if (!inputDoc.value) {
+      return;
+    }
+
+    const chat = {
+      id: chats.length + 1,
+      isAiResponse: false,
+      content: inputDoc.value,
+      createdAt: new Date(),
+    };
+    addChat(chat);
+
+    const { userChat, aiChat } = await sendChat(selectedRoomId, inputDoc.value);
+    setChats([...chats, userChat, aiChat]);
+    inputDoc.value = "";
+  };
 
   const handleClickChatRoom = (event) => {
     if (selectedRoomId) {
@@ -217,8 +236,13 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
                 <ChatScreenContentInput
                   placeholder="금융의 뜻이 뭐야?"
                   id="content-input"
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      handleSendChat();
+                    }
+                  }}
                 />
-                <ChatScreenInputSendButton>
+                <ChatScreenInputSendButton onClick={handleSendChat}>
                   <img src={send} />
                 </ChatScreenInputSendButton>
               </ChatScreenContentInputContainer>
