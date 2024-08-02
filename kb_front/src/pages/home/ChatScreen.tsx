@@ -167,7 +167,7 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
         const findChats = await getChatsByChatRoomId(selectedRoomId);
         setChats(findChats);
       } else {
-        const findChats = localStorage.getItem(selectedRoomId);
+        const findChats = JSON.parse(localStorage.getItem(selectedRoomId));
         setChats(findChats);
       }
     };
@@ -211,6 +211,10 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           id: chatRooms.length + 1,
         };
         addChatRoom(newChatRoom);
+        localStorage.setItem(
+          "chatRooms",
+          JSON.stringify([...chatRooms, newChatRoom]),
+        );
         addChat(chat);
         const aiChatResponse = await sendNoAuthChat(inputDoc.value);
         const aiChat = {

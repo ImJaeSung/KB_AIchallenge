@@ -80,7 +80,7 @@ const HomeImage = styled.img`
 
 export default function HomePage() {
   const [isChatScreenOpen, setIsChatScreenOpen] = useState(false);
-  const { setMember, setIsLoading } = useMemberStore();
+  const { member, setMember, setIsLoading } = useMemberStore();
   const { setChatRooms } = useChatRoomsStore();
 
   useEffect(() => {
@@ -94,8 +94,13 @@ export default function HomePage() {
     };
 
     const getChatRoomsAndSet = async () => {
-      const chatRoomsData = await getChatRooms();
-      setChatRooms(chatRoomsData);
+      if (member) {
+        const chatRoomsData = await getChatRooms();
+        setChatRooms(chatRoomsData);
+      } else {
+        const chatRoomsData = localStorage.getItem("chatRooms");
+        setChatRooms(JSON.parse(chatRoomsData));
+      }
     };
 
     if (!localStorage.getItem("accessToken")) {

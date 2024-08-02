@@ -46,6 +46,7 @@ export default function ChatContents() {
   const [chatElements, setChatElements] = useState([]);
 
   useEffect(() => {
+    console.log(chats);
     setChatElements(
       chats.map((chat) => (
         <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
