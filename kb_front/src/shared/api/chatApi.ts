@@ -93,3 +93,21 @@ export const sendChat = async (chatRoomId: string, content: string) => {
       return null;
     });
 };
+
+export const sendNoAuthChat = async (content: string) => {
+  return await fetch(`http://localhost:8000/chats/send-noAuth`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content,
+    }),
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .catch((err) => {
+      return null;
+    });
+};

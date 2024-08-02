@@ -5,10 +5,16 @@ import ChatContents from "./ChatContents.tsx";
 import {
   useChatRoomsStore,
   useChatsStore,
+  useMemberStore,
   useSelectedRoomStore,
 } from "shared/store";
 import { useEffect } from "react";
-import { createChatRoom, getChatsByChatRoomId, sendChat } from "shared/api";
+import {
+  createChatRoom,
+  getChatsByChatRoomId,
+  sendChat,
+  sendNoAuthChat,
+} from "shared/api";
 
 const ChatScreenOuter = styled.div`
   position: fixed;
@@ -153,11 +159,17 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
   const { selectedRoomId, setSelectedRoom } = useSelectedRoomStore();
   const { chatRooms, addChatRoom } = useChatRoomsStore();
   const { chats, setChats, addChat } = useChatsStore();
+  const { member } = useMemberStore();
 
   useEffect(() => {
     const getChatsAndSet = async () => {
-      const findChats = await getChatsByChatRoomId(selectedRoomId);
-      setChats(findChats);
+      if (member) {
+        const findChats = await getChatsByChatRoomId(selectedRoomId);
+        setChats(findChats);
+      } else {
+        const findChats = localStorage.getItem(selectedRoomId);
+        setChats(findChats);
+      }
     };
 
     if (selectedRoomId) {
@@ -173,33 +185,59 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
       return;
     }
 
-    if (selectedRoomId) {
-      const chat = {
-        id: chats.length + 1,
-        isAiResponse: false,
-        content: inputDoc.value,
-        createdAt: new Date(),
-      };
-      addChat(chat);
+    const chat = {
+      id: chats.length + 1,
+      isAiResponse: false,
+      content: inputDoc.value,
+      createdAt: new Date(),
+    };
 
-      const { userChat, aiChat } = await sendChat(
-        selectedRoomId,
-        inputDoc.value,
-      );
-      setChats([...chats, userChat, aiChat]);
+    if (!member) {
+      if (selectedRoomId) {
+        addChat(chat);
+
+        const aiChatResponse = await sendNoAuthChat(inputDoc.value);
+        const aiChat = {
+          id: chats.length + 2,
+          ...aiChatResponse,
+        };
+        localStorage.setItem(
+          selectedRoomId,
+          JSON.stringify([...chats, chat, aiChat]),
+        );
+        setChats([...chats, chat, aiChat]);
+      } else {
+        const newChatRoom = {
+          id: chatRooms.length + 1,
+        };
+        addChatRoom(newChatRoom);
+        addChat(chat);
+        const aiChatResponse = await sendNoAuthChat(inputDoc.value);
+        const aiChat = {
+          id: chats.length + 2,
+          ...aiChatResponse,
+        };
+        localStorage.setItem(newChatRoom.id, JSON.stringify([chat, aiChat]));
+
+        setSelectedRoom(newChatRoom.id);
+      }
     } else {
-      const { chatRoomId, createdAt } = await createChatRoom();
-      addChatRoom({ id: chatRoomId, createdAt });
-      const chat = {
-        id: chats.length + 1,
-        isAiResponse: false,
-        content: inputDoc.value,
-        createdAt: new Date(),
-      };
-      addChat(chat);
-      await sendChat(chatRoomId, inputDoc.value);
+      if (selectedRoomId) {
+        addChat(chat);
 
-      setSelectedRoom(chatRoomId);
+        const { userChat, aiChat } = await sendChat(
+          selectedRoomId,
+          inputDoc.value,
+        );
+        setChats([...chats, userChat, aiChat]);
+      } else {
+        const { chatRoomId, createdAt } = await createChatRoom();
+        addChatRoom({ id: chatRoomId, createdAt });
+        addChat(chat);
+        await sendChat(chatRoomId, inputDoc.value);
+
+        setSelectedRoom(chatRoomId);
+      }
     }
     inputDoc.value = "";
   };
