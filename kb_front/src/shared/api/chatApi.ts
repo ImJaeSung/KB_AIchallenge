@@ -1,7 +1,7 @@
 export const getChatRooms = async () => {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
-    return null;
+    return [];
   }
 
   const response = await fetch("http://localhost:8000/chats", {
