@@ -94,13 +94,8 @@ export default function HomePage() {
     };
 
     const getChatRoomsAndSet = async () => {
-      if (member) {
-        const chatRoomsData = await getChatRooms();
-        setChatRooms(chatRoomsData);
-      } else {
-        const chatRoomsData = localStorage.getItem("chatRooms");
-        setChatRooms(JSON.parse(chatRoomsData));
-      }
+      const chatRoomsData = await getChatRooms();
+      setChatRooms(chatRoomsData);
     };
 
     if (!localStorage.getItem("accessToken")) {
