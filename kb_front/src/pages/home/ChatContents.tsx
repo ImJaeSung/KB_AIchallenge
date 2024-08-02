@@ -1,13 +1,11 @@
 import styled from "styled-components";
-import { useChatsStore, useSelectedRoomStore } from "shared/store";
+import {
+  isNotYetRenderedChat,
+  useChatsStore,
+  useSelectedRoomStore,
+} from "shared/store";
 import { useEffect, useState } from "react";
-
-interface Chat {
-  id: number;
-  isAiResponse: boolean;
-  content: string;
-  createdAt: Date;
-}
+import Typical from "react-typical";
 
 const ChatScreenContentContainer = styled.div`
   display: flex;
@@ -15,13 +13,13 @@ const ChatScreenContentContainer = styled.div`
   height: 95%;
   overflow-y: auto;
   color: #000;
-  padding: 10px; /* 컨테이너의 패딩 추가 */
+  padding: 10px;
 `;
 
 const ChatScreenContentDiv = styled.div<{
   $isUser: boolean;
 }>`
-  display: inline-flex; /* inline-flex로 설정하여 너비가 콘텐츠에 맞게 조정되도록 함 */
+  display: inline-flex;
   justify-content: ${(props) => (props.$isUser ? "flex-end" : "flex-start")};
   margin: 5px 0;
   padding: 5px;
@@ -48,10 +46,14 @@ export default function ChatContents() {
   useEffect(() => {
     console.log(chats);
     setChatElements(
-      chats.map((chat) => (
+      chats.map((chat, index) => (
         <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
           <ChatScreenContent $isUser={!chat.isAiResponse}>
-            {chat.content}
+            {index === chats.length - 1 && isNotYetRenderedChat(chat.id) ? (
+              <Typical steps={[chat.content]} wrapper="p" />
+            ) : (
+              chat.content
+            )}
           </ChatScreenContent>
         </ChatScreenContentDiv>
       )),

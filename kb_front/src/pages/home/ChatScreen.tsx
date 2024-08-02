@@ -3,6 +3,7 @@ import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
 import ChatContents from "./ChatContents.tsx";
 import {
+  notYetRendered,
   useChatRoomsStore,
   useChatsStore,
   useMemberStore,
@@ -205,6 +206,7 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           selectedRoomId,
           JSON.stringify([...chats, chat, aiChat]),
         );
+        notYetRendered.push(aiChat.id);
         setChats([...chats, chat, aiChat]);
       } else {
         const newChatRoom = {
@@ -222,6 +224,7 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           ...aiChatResponse,
         };
         localStorage.setItem(newChatRoom.id, JSON.stringify([chat, aiChat]));
+        notYetRendered.push(aiChat.id);
 
         setSelectedRoom(newChatRoom.id);
       }
@@ -233,12 +236,15 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           selectedRoomId,
           inputDoc.value,
         );
+        notYetRendered.push(aiChat.id);
+
         setChats([...chats, userChat, aiChat]);
       } else {
         const { chatRoomId, createdAt } = await createChatRoom();
         addChatRoom({ id: chatRoomId, createdAt });
         addChat(chat);
-        await sendChat(chatRoomId, inputDoc.value);
+        const { aiChat } = await sendChat(chatRoomId, inputDoc.value);
+        notYetRendered.push(aiChat.id);
 
         setSelectedRoom(chatRoomId);
       }
