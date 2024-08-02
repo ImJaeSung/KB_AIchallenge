@@ -2,7 +2,11 @@ import styled from "styled-components";
 import chatbot from "assets/home/chatbot.png";
 import send from "assets/home/send.png";
 import ChatContents from "./ChatContents.tsx";
-import { useChatRoomsStore, useChatsStore } from "shared/store";
+import {
+  useChatRoomsStore,
+  useChatsStore,
+  useSelectedRoomStore,
+} from "shared/store";
 import { useEffect, useState } from "react";
 import { getChatsByChatRoomId } from "../../shared/api";
 
@@ -146,21 +150,32 @@ const ChatScreenInputSendButton = styled.button`
 `;
 
 export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
-  const [selectedChatRoom, setSelectedChatRoom] = useState<string | null>(null);
+  const { selectedRoomId, setSelectedRoom } = useSelectedRoomStore();
   const { chatRooms } = useChatRoomsStore();
   const { setChats } = useChatsStore();
 
   useEffect(() => {
     const getChatsAndSet = async () => {
-      const findChats = await getChatsByChatRoomId(selectedChatRoom);
+      const findChats = await getChatsByChatRoomId(selectedRoomId);
       console.log(findChats);
       setChats(findChats);
     };
 
-    if (selectedChatRoom) {
+    if (selectedRoomId) {
       getChatsAndSet();
     }
-  }, [selectedChatRoom]);
+  }, [selectedRoomId]);
+
+  const handleClickChatRoom = (event) => {
+    if (selectedRoomId) {
+      const pastSelectedChatRoom = document.getElementById(selectedRoomId);
+      pastSelectedChatRoom.style.backgroundColor = "transparent";
+    }
+
+    event.target.style.backgroundColor = "#f1e58c";
+    const chatRoomId = event.target.id;
+    setSelectedRoom(chatRoomId);
+  };
 
   return (
     <>
@@ -187,7 +202,11 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           <ChatScreenInner>
             <ChatHistoriesContainer id="chat-histories-container">
               {[...chatRooms].reverse().map((chatRoom, index) => (
-                <ChatHistoryDiv id={chatRoom.id} key={chatRoom.id}>
+                <ChatHistoryDiv
+                  id={chatRoom.id}
+                  key={chatRoom.id}
+                  onClick={handleClickChatRoom}
+                >
                   {chatRooms.length - index}번째 대화
                 </ChatHistoryDiv>
               ))}
