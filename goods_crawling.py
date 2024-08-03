@@ -95,4 +95,7 @@ for code in codes:
 
   trust_products.append((name, feature))
 
-# %%
+
+print(products)
+print(loan_products)
+print(trust_products)
