@@ -3,6 +3,8 @@ import re
 import requests
 from bs4 import BeautifulSoup
 #%%
+
+#%%
 """예금"""
 requested = requests.get('https://obank.kbstar.com/quics?page=C016613', 'html.parser')
 soup = BeautifulSoup(requested.content, 'html.parser')
