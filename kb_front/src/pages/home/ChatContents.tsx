@@ -40,6 +40,28 @@ const ChatScreenContent = styled.div<{
   white-space: pre-wrap;
 `;
 
+const AiChatContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const AiChatTitle = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+`;
+
+const AiChatContent = styled.div`
+  font-size: 20px;
+  padding: 10px;
+  background-color: rgba(238, 238, 174, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+  max-width: 80%;
+`;
+
 const TypingComponent = ({ content }) => {
   return (
     <TypeAnimation
@@ -62,20 +84,20 @@ export default function ChatContents() {
   const createAiAnswerComponent = (chat) => {
     const summarizedAiChat = summarizeAiChat(chat.content);
     return (
-      <>
-        <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+      <AiChatContentContainer>
+        <AiChatTitle>
           <span>1. 단어 정의</span>
-        </ChatScreenContent>
-        <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+        </AiChatTitle>
+        <AiChatContent>
           <span>{summarizedAiChat.definition}</span>
-        </ChatScreenContent>
-        <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+        </AiChatContent>
+        <AiChatTitle style={{ marginTop: "10px" }}>
           <span>2. 예시 상황</span>
-        </ChatScreenContent>
-        <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+        </AiChatTitle>
+        <AiChatContent>
           <span>{summarizedAiChat.example}</span>
-        </ChatScreenContent>
-      </>
+        </AiChatContent>
+      </AiChatContentContainer>
     );
   };
 
