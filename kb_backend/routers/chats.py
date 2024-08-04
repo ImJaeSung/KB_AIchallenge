@@ -38,12 +38,13 @@ def getChatRoom(request: Request, chatRoomId: str):
 
 @router.post("/send")
 def createChat(request: Request, sendChatRequest: SendChatRequest):
+    question = sendChatRequest.content
     getMemberIdFromAccessToken(request)
     userSendTime = datetime.now()
     userChatId = esClient.index(index="chats", body={
         "chatRoomId": sendChatRequest.chatRoomId,
         "isAiResponse": False,
-        "content": sendChatRequest.content,
+        "content": question,
         "createdAt": userSendTime
     })["_id"].encode("utf-8")
 
@@ -63,7 +64,7 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
     return {
         "userChat": {
             "id": userChatId,
-            "content": sendChatRequest.content,
+            "content": question,
             "isAiResponse": False,
             "createdAt": userSendTime
         },
