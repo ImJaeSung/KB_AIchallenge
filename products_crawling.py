@@ -7,6 +7,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
 import time
+
+from tqdm import tqdm
+import pandas as pd
 #%%
 # Set up the WebDriver
 service = Service(ChromeDriverManager().install())
@@ -34,26 +37,23 @@ def deposit_product(item, code):
     wait = WebDriverWait(driver, 10)  # 10 seconds wait time
     time.sleep(2)  # wait for the page to load
     try:
-        feature = driver.find_element(By.XPATH, "//strong[text()='상품특징']/following-sibling::div[@class='infoCont']").text
-        name = driver.find_element(By.CSS_SELECTOR, '#b061645 > div.product-basic > h2').text
+        name = driver.find_element(
+            By.XPATH, '/html/body/div[1]/div[3]/div[2]/div[5]/div/div[1]/h2/b').text
+        feature = driver.find_element(
+            By.XPATH, '/html/body/div[1]/div[3]/div[2]/div[5]/div/div[3]/div/ul/li[1]').text
         feature = re.sub("\n", "", feature)
         name = re.sub("\n", " ", name)
         deposit_product.append((name, feature))
-        return deposit_product
     
-    except Exception as e:
-        print(f"An error occurred while fetching product details: {e}")
-        feature = driver.find_element(By.XPATH, "//strong[text()='상품유형']/following-sibling::div[@class='infoCont']").text
-        name = driver.find_element(By.CSS_SELECTOR, '#b061645 > div.product-basic > h2').text
-        feature = re.sub("\n", "", feature)
-        name = re.sub("\n", " ", name)
-        deposit_product.append((name, feature))
-        return deposit_product
+    except:
+        print("pass")
+        
+    return deposit_product
 
 #%%
 items_codes = []
 
-for item in list(product_items.values()):
+for item in tqdm(list(product_items.values()), desc="get codes..."):
     element = wait.until(EC.presence_of_element_located((By.XPATH, f"{item}")))
     time.sleep(2)  # wait for the page to load
     element.click()
@@ -64,7 +64,7 @@ for item in list(product_items.values()):
         try:
             page_button = wait.until(
                         EC.presence_of_element_located(
-                            (By.XPATH, 
+                            (By.XPATH,
                             f'/html/body/div[1]/div[3]/div[2]/div[5]/div[3]/div/form[{j}]/span'
                             )
                         )
@@ -89,15 +89,40 @@ for item in list(product_items.values()):
                 
                 items_codes.append((id_value, name))
 
-        except Exception as e:
-            print("No more pages or an error occurred:", e)
+        except:
+            page_button = wait.until(
+                    EC.presence_of_element_located(
+                        (By.XPATH,
+                        f'/html/body/div[1]/div[3]/div[2]/div[5]/div[3]/div/form/span'
+                        )
+                    )
+                )
+            page_button.click()
+            time.sleep(2)
+            product_list = driver.find_element(By.CSS_SELECTOR, 'ul.list-product1')
 
-print(items_codes)
+            # 모든 'li' 항목 찾기
+            lis = product_list.find_elements(By.TAG_NAME, 'li')
 
-
+            for li in lis:
+                # 고유번호 추출
+                a_tag = li.find_element(By.CSS_SELECTOR, 'a.title')
+                onclick_value = a_tag.get_attribute('onclick')
+                id_match = re.search(r"dtlDeposit\('([^']*)'", onclick_value)
+                id_value = id_match.group(1) if id_match else 'ID 없음'
+                
+                # 이름 추출
+                strong_tag = a_tag.find_element(By.TAG_NAME, 'strong')
+                name = strong_tag.text.strip()
+                
+                items_codes.append((id_value, name))
+#%%
+unique_codes = list(set(items_codes))
+assert len(unique_codes) == 58
+#%%
 def main():  
     products = []
-    for item_code in items_codes:
+    for item_code in tqdm(unique_codes, desc="get explanation..."):
         item = item_code[1]
         code = item_code[0]
         product = deposit_product(item, code)
@@ -105,5 +130,10 @@ def main():
     return products
 
 #%%
-main()
+product = main()
+columns = ["Product Name", "Product Features"]
+products_df = pd.DataFrame(product, columns=columns)
+products_df.to_csv('./assets/product.csv')
+
 driver.quit()
+# %%
