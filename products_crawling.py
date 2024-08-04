@@ -131,9 +131,9 @@ def main():
 
 #%%
 product = main()
-columns = ["Product Name", "Product Features"]
+columns = ["상품이름", "상품특징"]
 products_df = pd.DataFrame(product, columns=columns)
-products_df.to_csv('./assets/product.csv')
+products_df.to_csv('./assets/product.csv', index=False)
 
 driver.quit()
 # %%
