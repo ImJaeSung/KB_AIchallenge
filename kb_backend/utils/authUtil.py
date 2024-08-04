@@ -1,8 +1,8 @@
 from fastapi import Request
 import jwt
 import datetime
-from db.redisClient import redisClient
-from db.elasticsearchClient import *
+from kb_backend.db.redisClient import redisClient
+from kb_backend.db.elasticsearchClient import *
 
 secretKey = "2uaI22VtQR3GLebHv6q52MrH3VLcocXd"
 

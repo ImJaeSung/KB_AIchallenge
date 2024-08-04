@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Request
-from utils.authUtil import *
-from db.elasticsearchClient import *
+from kb_backend.utils.authUtil import *
+from kb_backend.db.elasticsearchClient import *
 from datetime import datetime
-from dto.chatDto import *
+from kb_backend.dto.chatDto import *
+from test import getAiAnswer
 
 router = APIRouter()
 
@@ -47,7 +48,8 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
     })["_id"].encode("utf-8")
 
     # TODO: ai 답변 생성하는 로직 추가
-    aiResponse = "AI Response"
+    df = esIndexToDf("word_dictionary")
+    aiResponse = getAiAnswer(df, question)
     aiResponseTime = datetime.now()
     aiChatId = esClient.index(index="chats", body={
         "chatRoomId": sendChatRequest.chatRoomId,
@@ -72,10 +74,12 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
         }
     }
 
+
 @router.post("/send-noAuth")
 def createChatNoAuth(sendChatRequest: SendNoAuthChatRequest):
-    content = sendChatRequest.content
-    aiResponse = "AI Response"
+    question = sendChatRequest.content
+    df = esIndexToDf("word_dictionary")
+    aiResponse = getAiAnswer(df, question)
     return {
         "content": aiResponse,
         "isAiResponse": True,

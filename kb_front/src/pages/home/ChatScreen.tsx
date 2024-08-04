@@ -205,11 +205,13 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
     if (!inputDoc.value) {
       return;
     }
+    const question = inputDoc.value;
+    inputDoc.value = "";
 
     const chat = {
       id: chats.length + 1,
       isAiResponse: false,
-      content: inputDoc.value,
+      content: question,
       createdAt: new Date(),
     };
 
@@ -217,7 +219,7 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
       if (selectedRoomId) {
         addChat(chat);
 
-        const aiChatResponse = await sendNoAuthChat(inputDoc.value);
+        const aiChatResponse = await sendNoAuthChat(question);
         const aiChat = {
           id: chats.length + 2,
           ...aiChatResponse,
@@ -238,7 +240,7 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
           JSON.stringify([...chatRooms, newChatRoom]),
         );
         addChat(chat);
-        const aiChatResponse = await sendNoAuthChat(inputDoc.value);
+        const aiChatResponse = await sendNoAuthChat(question);
         const aiChat = {
           id: chats.length + 2,
           ...aiChatResponse,
@@ -252,10 +254,7 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
       if (selectedRoomId) {
         addChat(chat);
 
-        const { userChat, aiChat } = await sendChat(
-          selectedRoomId,
-          inputDoc.value,
-        );
+        const { userChat, aiChat } = await sendChat(selectedRoomId, question);
         notYetRendered.push(aiChat.id);
 
         setChats([...chats, userChat, aiChat]);
@@ -263,13 +262,12 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
         const { chatRoomId, createdAt } = await createChatRoom();
         addChatRoom({ id: chatRoomId, createdAt });
         addChat(chat);
-        const { aiChat } = await sendChat(chatRoomId, inputDoc.value);
+        const { aiChat } = await sendChat(chatRoomId, question);
         notYetRendered.push(aiChat.id);
 
         setSelectedRoom(chatRoomId);
       }
     }
-    inputDoc.value = "";
   };
 
   const handleClickChatRoom = (event) => {

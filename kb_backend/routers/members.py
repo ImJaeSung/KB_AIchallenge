@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Request
 import requests
-from dto.memberDto import *
-from utils.authUtil import *
-from db.elasticsearchClient import *
+from kb_backend.dto.memberDto import *
+from kb_backend.utils.authUtil import *
+from kb_backend.db.elasticsearchClient import *
 from datetime import datetime
 
 router = APIRouter()

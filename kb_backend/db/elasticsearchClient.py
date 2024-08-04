@@ -1,4 +1,6 @@
 from elasticsearch import Elasticsearch, helpers
+import pandas as pd
+import ast
 
 esClient = Elasticsearch(
     hosts=["http://172.16.147.137:9200"],
@@ -84,3 +86,13 @@ def findChatsByChatRoomId(chatRoomId):
     except Exception as e:
         print(f"Error: {str(e)}")
         return []
+
+def esIndexToDf(index):
+    df = esClient.search(index=index, body={"query": {"match_all": {}}})["hits"]["hits"]
+    for i in range(len(df)):
+        df[i]["_source"]["embedding"] = ast.literal_eval(df[i]["_source"]["embedding"])
+        df[i] = df[i]["_source"]
+
+    df = pd.DataFrame(df)
+    return df
+
