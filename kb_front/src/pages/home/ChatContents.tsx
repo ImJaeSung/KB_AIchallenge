@@ -6,7 +6,7 @@ import {
   useSelectedRoomStore,
 } from "shared/store";
 import { useEffect, useState } from "react";
-import Typical from "react-typical";
+import { TypeAnimation } from "react-type-animation";
 
 const ChatScreenContentContainer = styled.div`
   display: flex;
@@ -40,19 +40,24 @@ const ChatScreenContent = styled.div<{
   white-space: pre-wrap;
 `;
 
+const TypingComponent = ({ content }) => {
+  return (
+    <TypeAnimation
+      sequence={[
+        content,
+        1000, // 1초 지연 시간
+      ]}
+      speed={50} // 타이핑 속도를 조절합니다. (밀리초 단위)
+      wrapper="span"
+      repeat={1}
+    />
+  );
+};
+
 export default function ChatContents() {
   const { selectedRoomId } = useSelectedRoomStore();
   const { chats } = useChatsStore();
   const [chatElements, setChatElements] = useState([]);
-
-  const processLineBreaks = (content) => {
-    return content.split("\n").map((line, index, array) => (
-      <React.Fragment key={index}>
-        {line}
-        {index < array.length - 1 && <br />}
-      </React.Fragment>
-    ));
-  };
 
   useEffect(() => {
     setChatElements(
@@ -60,9 +65,9 @@ export default function ChatContents() {
         <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
           <ChatScreenContent $isUser={!chat.isAiResponse}>
             {index === chats.length - 1 && isNotYetRenderedChat(chat.id) ? (
-              <Typical steps={[chat.content, chat.content]} wrapper="span" />
+              <TypingComponent content={chat.content} />
             ) : (
-              processLineBreaks(chat.content)
+              <span>{chat.content}</span>
             )}
           </ChatScreenContent>
         </ChatScreenContentDiv>
