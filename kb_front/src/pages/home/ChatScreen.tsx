@@ -63,6 +63,7 @@ const ChatHistoryDiv = styled.div`
 
   &:hover {
     background-color: #f1e58c;
+    cursor: pointer;
   }
 `;
 
