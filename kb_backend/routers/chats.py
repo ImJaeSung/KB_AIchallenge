@@ -57,6 +57,7 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
         "content": aiResponse,
         "createdAt": aiResponseTime
     })["_id"].encode("utf-8")
+    findNewDataAndSave()
 
     esClient.indices.refresh(index="chats")
     return {
@@ -80,6 +81,9 @@ def createChatNoAuth(sendChatRequest: SendNoAuthChatRequest):
     question = sendChatRequest.content
     df = esIndexToDf("word_dictionary")
     aiResponse = getAiAnswer(df, question)
+    findNewDataAndSave()
+
+    esClient.indices.refresh(index="chats")
     return {
         "content": aiResponse,
         "isAiResponse": True,

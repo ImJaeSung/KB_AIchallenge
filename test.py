@@ -49,6 +49,7 @@ def get_args(debug):
 
 # %%
 def getAiAnswer(df, question):
+    print(df)
     # %%
     config = vars(get_args(debug=True))
 
