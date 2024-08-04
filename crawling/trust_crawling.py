@@ -149,7 +149,7 @@ def main():
 #%%
 product = main()
 columns = ["상품이름", "상품특징"]
-products_df = pd.DataFrame(product, columns=columns)
+products_df = pd.DataFrame(product, columns=columns, index=False)
 products_df.to_csv('./assets/trust.csv')
 
 driver.quit()
