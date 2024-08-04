@@ -69,7 +69,6 @@ const ChatHistoryDiv = styled.div`
 const ChatScreenContainer = styled.div`
   width: 60vw;
   height: 100%;
-  background-color: #000;
   color: #fff;
   background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

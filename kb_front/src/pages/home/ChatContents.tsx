@@ -60,11 +60,22 @@ export default function ChatContents() {
   const [chatElements, setChatElements] = useState([]);
 
   const createAiAnswerComponent = (chat) => {
-    const summarizedContent = summarizeAiChat(chat.content);
+    const summarizedAiChat = summarizeAiChat(chat.content);
     return (
-      <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
-        <span>{summarizedContent}</span>
-      </ChatScreenContent>
+      <>
+        <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+          <span>1. 단어 정의</span>
+        </ChatScreenContent>
+        <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+          <span>{summarizedAiChat.definition}</span>
+        </ChatScreenContent>
+        <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+          <span>2. 예시 상황</span>
+        </ChatScreenContent>
+        <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+          <span>{summarizedAiChat.example}</span>
+        </ChatScreenContent>
+      </>
     );
   };
 
@@ -79,13 +90,6 @@ export default function ChatContents() {
               <span>{chat.content}</span>
             </ChatScreenContent>
           )}
-          {/*<ChatScreenContent $backgroundColor={"blue"}>*/}
-          {/*  {index === chats.length - 1 && isNotYetRenderedChat(chat.id) ? (*/}
-          {/*    <TypingComponent content={chat.content} />*/}
-          {/*  ) : (*/}
-          {/*    <span>{chat.content}</span>*/}
-          {/*  )}*/}
-          {/*</ChatScreenContent>*/}
         </ChatScreenContentDiv>
       )),
     );
