@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import {
   isNotYetRenderedChat,
@@ -26,7 +27,7 @@ const ChatScreenContentDiv = styled.div<{
   width: auto;
 `;
 
-const ChatScreenContent = styled.p<{
+const ChatScreenContent = styled.div<{
   $isUser: boolean;
 }>`
   background-color: ${(props) =>
@@ -36,6 +37,7 @@ const ChatScreenContent = styled.p<{
   font-size: 20px;
   padding: 10px;
   max-width: 70%;
+  white-space: pre-wrap;
 `;
 
 export default function ChatContents() {
@@ -43,15 +45,24 @@ export default function ChatContents() {
   const { chats } = useChatsStore();
   const [chatElements, setChatElements] = useState([]);
 
+  const processLineBreaks = (content) => {
+    return content.split("\n").map((line, index, array) => (
+      <React.Fragment key={index}>
+        {line}
+        {index < array.length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+
   useEffect(() => {
     setChatElements(
       chats.map((chat, index) => (
         <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
           <ChatScreenContent $isUser={!chat.isAiResponse}>
             {index === chats.length - 1 && isNotYetRenderedChat(chat.id) ? (
-              <Typical steps={[chat.content]} wrapper="p" />
+              <Typical steps={[chat.content, chat.content]} wrapper="span" />
             ) : (
-              chat.content
+              processLineBreaks(chat.content)
             )}
           </ChatScreenContent>
         </ChatScreenContentDiv>
