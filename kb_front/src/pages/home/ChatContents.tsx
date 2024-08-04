@@ -62,17 +62,81 @@ const AiChatContent = styled.div`
   max-width: 80%;
 `;
 
-const TypingComponent = ({ content }) => {
+const TypingComponent = ({ content, delay }) => {
   return (
     <TypeAnimation
       sequence={[
         content,
-        1000, // 1초 지연 시간
+        delay, // 지연 시간
       ]}
-      speed={50} // 타이핑 속도를 조절합니다. (밀리초 단위)
+      speed={80} // 타이핑 속도
       wrapper="span"
       repeat={1}
     />
+  );
+};
+
+const AiAnswerComponent = ({ chat }) => {
+  const summarizedAiChat = summarizeAiChat(chat.content);
+  const [showTitle1, setShowTitle1] = useState(false);
+  const [showContent1, setShowContent1] = useState(false);
+  const [showTitle2, setShowTitle2] = useState(false);
+  const [showContent2, setShowContent2] = useState(false);
+  const [showTitle3, setShowTitle3] = useState(false);
+  const [showContent3, setShowContent3] = useState(false);
+
+  useEffect(() => {
+    // 순차적으로 표시되도록 설정
+    const timer1 = setTimeout(() => setShowTitle1(true), 0);
+    const timer2 = setTimeout(() => setShowContent1(true), 500);
+    const timer3 = setTimeout(() => setShowTitle2(true), 5000);
+    const timer4 = setTimeout(() => setShowContent2(true), 5500);
+    const timer5 = setTimeout(() => setShowTitle3(true), 10000);
+    const timer6 = setTimeout(() => setShowContent3(true), 10500);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      clearTimeout(timer4);
+      clearTimeout(timer5);
+      clearTimeout(timer6);
+    };
+  }, []);
+
+  return (
+    <AiChatContentContainer>
+      {showTitle1 && (
+        <AiChatTitle>
+          <TypingComponent content="1. 단어 정의" delay={500} />
+        </AiChatTitle>
+      )}
+      {showContent1 && (
+        <AiChatContent>
+          <TypingComponent content={summarizedAiChat.definition} delay={500} />
+        </AiChatContent>
+      )}
+      {showTitle2 && (
+        <AiChatTitle style={{ marginTop: "10px" }}>
+          <TypingComponent content="2. 예시 상황" delay={500} />
+        </AiChatTitle>
+      )}
+      {showTitle2 && (
+        <AiChatContent>
+          <TypingComponent content={summarizedAiChat.example} delay={500} />
+        </AiChatContent>
+      )}
+      {showContent3 && (
+        <AiChatTitle>
+          <TypingComponent content="3. 세 번째 제목" delay={500} />
+        </AiChatTitle>
+      )}
+      {showContent3 && (
+        <AiChatContent>
+          <TypingComponent content={summarizedAiChat.test} delay={500} />
+        </AiChatContent>
+      )}
+    </AiChatContentContainer>
   );
 };
 
@@ -81,32 +145,29 @@ export default function ChatContents() {
   const { chats } = useChatsStore();
   const [chatElements, setChatElements] = useState([]);
 
-  const createAiAnswerComponent = (chat) => {
-    const summarizedAiChat = summarizeAiChat(chat.content);
-    return (
-      <AiChatContentContainer>
-        <AiChatTitle>
-          <span>1. 단어 정의</span>
-        </AiChatTitle>
-        <AiChatContent>
-          <span>{summarizedAiChat.definition}</span>
-        </AiChatContent>
-        <AiChatTitle style={{ marginTop: "10px" }}>
-          <span>2. 예시 상황</span>
-        </AiChatTitle>
-        <AiChatContent>
-          <span>{summarizedAiChat.example}</span>
-        </AiChatContent>
-      </AiChatContentContainer>
-    );
-  };
-
   useEffect(() => {
     setChatElements(
-      chats.map((chat, index) => (
+      chats.map((chat) => (
         <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
           {chat.isAiResponse ? (
-            createAiAnswerComponent(chat)
+            isNotYetRenderedChat(chat.id) ? (
+              <AiAnswerComponent chat={chat} />
+            ) : (
+              <AiChatContentContainer>
+                <AiChatTitle>1. 단어 정의</AiChatTitle>
+                <AiChatContent>
+                  {summarizeAiChat(chat.content).definition}
+                </AiChatContent>
+                <AiChatTitle>2. 예시 상황</AiChatTitle>
+                <AiChatContent>
+                  {summarizeAiChat(chat.content).example}
+                </AiChatContent>
+                <AiChatTitle>3. 세 번째 제목</AiChatTitle>
+                <AiChatContent>
+                  {summarizeAiChat(chat.content).test}
+                </AiChatContent>
+              </AiChatContentContainer>
+            )
           ) : (
             <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
               <span>{chat.content}</span>

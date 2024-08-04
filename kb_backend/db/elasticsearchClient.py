@@ -118,3 +118,6 @@ def findNewDataAndSave():
 def saveData():
     data = pd.read_csv("assets/data.csv")
     saveBulkData(data.to_dict(orient="records"))
+#
+# esClient.indices.delete(index="chatrooms")
+# esClient.indices.delete(index="chats")
