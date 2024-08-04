@@ -29,10 +29,9 @@ const ChatScreenContentDiv = styled.div<{
 `;
 
 const ChatScreenContent = styled.div<{
-  $isUser: boolean;
+  $backgroundColor: boolean;
 }>`
-  background-color: ${(props) =>
-    props.$isUser ? "rgba(238, 238, 174, 0.8)" : "#f9f0b4"};
+  background-color: ${(props) => props.$backgroundColor};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   font-size: 20px;
@@ -60,17 +59,33 @@ export default function ChatContents() {
   const { chats } = useChatsStore();
   const [chatElements, setChatElements] = useState([]);
 
+  const createAiAnswerComponent = (chat) => {
+    const summarizedContent = summarizeAiChat(chat.content);
+    return (
+      <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
+        <span>{summarizedContent}</span>
+      </ChatScreenContent>
+    );
+  };
+
   useEffect(() => {
     setChatElements(
       chats.map((chat, index) => (
         <ChatScreenContentDiv key={chat.id} $isUser={!chat.isAiResponse}>
-          <ChatScreenContent $isUser={!chat.isAiResponse}>
-            {index === chats.length - 1 && isNotYetRenderedChat(chat.id) ? (
-              <TypingComponent content={chat.content} />
-            ) : (
+          {chat.isAiResponse ? (
+            createAiAnswerComponent(chat)
+          ) : (
+            <ChatScreenContent $backgroundColor="rgba(238, 238, 174, 0.8)">
               <span>{chat.content}</span>
-            )}
-          </ChatScreenContent>
+            </ChatScreenContent>
+          )}
+          {/*<ChatScreenContent $backgroundColor={"blue"}>*/}
+          {/*  {index === chats.length - 1 && isNotYetRenderedChat(chat.id) ? (*/}
+          {/*    <TypingComponent content={chat.content} />*/}
+          {/*  ) : (*/}
+          {/*    <span>{chat.content}</span>*/}
+          {/*  )}*/}
+          {/*</ChatScreenContent>*/}
         </ChatScreenContentDiv>
       )),
     );
