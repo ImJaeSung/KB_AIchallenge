@@ -122,9 +122,9 @@ for loan_name, code in tqdm(unique_codes, desc="get explanation..."):
 #%%
 assert len(loan_products) == 172
 
-columns = ["Loan Type", "Product Name", "Product Features", "Eligibility Criteria"]
+columns = ["대출 목적", "상품 이름", "상품 특징", "가입 조건"]
 loan_products_df = pd.DataFrame(loan_products, columns=columns)
-loan_products_df.to_csv('./assets/loan.csv')
+loan_products_df.to_csv('./assets/loan.csv', index=False)
 # Close the WebDriver
 driver.quit()
 #%%
