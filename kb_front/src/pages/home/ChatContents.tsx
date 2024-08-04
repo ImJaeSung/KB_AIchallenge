@@ -7,6 +7,7 @@ import {
 } from "shared/store";
 import { useEffect, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
+import { summarizeAiChat } from "shared/util";
 
 const ChatScreenContentContainer = styled.div`
   display: flex;
