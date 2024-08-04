@@ -28,9 +28,10 @@ def get_similarity(query, doc):
 
 #%%
 data = pd.read_csv("./assets/data.csv")
-query = "통화옵션이 뭐야?"
+query = "저는 28살 남성이고 직업은 공무원입니다. 소득은 월 280만원입니다. 통화옵션의 정의가 뭐야?"
 query_word = "통화옵션"
 definition = data[data['word'] == query_word]['definition'].values[0]
+print(definition)
 #%%
 def postprocessing(text):
     # 첫 번째 온점의 위치를 찾음
