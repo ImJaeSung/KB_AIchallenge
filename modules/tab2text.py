@@ -15,7 +15,7 @@ def tab2text(data: pd.DataFrame, idx):
 
     text = ", ".join(
         [
-            "%s 은/는 %s" % (row.index[i], str(row[i]).strip())
+            "%s은 %s" % (row.index[i], str(row[i]).strip())
             for i in key
         ]
     )

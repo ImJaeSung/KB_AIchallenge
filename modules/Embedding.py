@@ -1,8 +1,10 @@
+import torch
 # langchain_openaiembedding
 from langchain_openai import OpenAIEmbeddings
 
 # Transformers 
 from transformers import AutoModel, AutoTokenizer
+from transformers import BertTokenizer, BertModel
 
 
 
@@ -27,16 +29,32 @@ class HuggingfaceEmbedder_toDB():
         outputs = self.model(**inputs)
         embeddings = outputs.last_hidden_state.mean(dim=1).detach().numpy()
         return embeddings.tolist()
-
+    
+class BERT_Embedder():
+    def __init__(self, model_name='snunlp/KR-FinBert'):
+        self.tokenizer = BertTokenizer.from_pretrained(model_name)
+        self.model = BertModel.from_pretrained(model_name)
+    
+    def embed(self, text):
+        inputs = self.tokenizer(text, return_tensors='pt', padding=True, truncation=True)
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+        cls_embedding = outputs.last_hidden_state[:, 0, :] # [CLS] token embedding
+        return cls_embedding
+    
 # Function to get the appropriate embedder
 def get_embedder(embedding_type, **kwargs):
     if embedding_type == "openai":
         return OpenAIEmbedder_toDB(api_key=kwargs.get("api_key"))
     elif embedding_type == "huggingface":
         return HuggingfaceEmbedder_toDB(model_name=kwargs.get("model_name"))
+    elif embedding_type =="bert":
+        return BERT_Embedder()
     else:
         raise ValueError("Unsupported embedding type")
 
+
+#%%
 '''
 from Embedding import OpenAIEmbedder_toDB, HuggingfaceEmbedder_toDB, get_embedder
 
