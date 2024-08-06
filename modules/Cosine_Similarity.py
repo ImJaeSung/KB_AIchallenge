@@ -1,5 +1,12 @@
 import pandas as pd
 import numpy as np
+import json
+from tqdm import tqdm
+
+from sklearn.metrics.pairwise import cosine_similarity
+from modules.Embedding import get_embedder
+from modules.tab2text import tab2text
+
 
 class CosineSimilarityCalculator:
     def __init__(self, threshold=0.8):
@@ -43,3 +50,29 @@ class CosineSimilarityCalculator:
             }
         else:
             return "해당 단어에 대한 정의가 사전에 정의되어있지 않습니다. 외부 검색 결과로 알려드리겠습니다."
+        
+#%%
+def top_K(query, doc_sentences, k=3):
+    embedder = get_embedder(embedding_type="bert")
+    query_embedding = embedder.embed(query)
+    scores = {}
+    
+    for sentence in tqdm(doc_sentences, desc="Calculating similarities..."):
+        sentence_embedding = embedder.embed(sentence)
+        similarity_score = cosine_similarity(query_embedding, sentence_embedding).item()
+        scores[sentence] = similarity_score
+    
+    top_k_sentences = sorted(scores, key=scores.get, reverse=True)[:k]
+    
+    return top_k_sentences, [scores[sentence] for sentence in top_k_sentences]
+
+#%%
+def postprocessing(text):
+    # 첫 번째 온점의 위치를 찾음
+    period_index = text.find('.')
+    
+    # 첫 번째 온점이 발견되면 그 위치까지의 문자열을 반환
+    if period_index != -1:
+        return text[:period_index + 1]
+    else:
+        return text  # 온점이 없는 경우, 원본 텍스트 반환
