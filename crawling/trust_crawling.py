@@ -49,7 +49,7 @@ def trust_product(class_, code):
         name = driver.find_element(By.CSS_SELECTOR, f'#{key_code} > div > div.n_pSummary > div > div.pTit > p').text
         feature = re.sub("\n", "", feature)
         name = re.sub("\n", " ", name)
-        trust_product.append((name, feature))
+        trust_product.append((class_, name, feature))
         return trust_product
 
 
@@ -144,7 +144,6 @@ def main():
     
     driver.quit()
     print("# items:", len(products))
-
     
     columns = ["상품분류", "상품이름", "상품특징"]
     products_df = pd.DataFrame(products, columns=columns)
