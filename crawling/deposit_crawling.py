@@ -31,6 +31,28 @@ product_items = [
 ]
 
 #%%
+def deposit_product(class_, code):    
+    deposit_product = []
+    product_url = f'https://obank.kbstar.com/quics?page=C016613&cc=b061496:b061645&isNew=N&prcode={code}'
+    driver.get(product_url)
+    wait = WebDriverWait(driver, 10)  # 10 seconds wait time
+    time.sleep(7)  # wait for the page to load
+    try:
+        feature = driver.find_element(By.XPATH, "//strong[text()='상품특징']/following-sibling::div[@class='infoCont']").text
+        name = driver.find_element(By.CSS_SELECTOR, '#b061645 > div.product-basic > h2 > b').text
+        feature = re.sub("\n", "", feature)
+        name = re.sub("\n", " ", name)
+        deposit_product.append((class_, name, feature))
+        return deposit_product
+    
+    except:
+        feature = driver.find_element(By.XPATH, "//strong[text()='상품특징']/following-sibling::div[@class='infoCont']").text
+        name = driver.find_element(By.CSS_SELECTOR, '#b061645 > div.product-basic > h2 > b').text
+        feature = re.sub("\n", "", feature)
+        name = re.sub("\n", " ", name)
+        deposit_product.append((class_, name, feature))
+        return deposit_product
+
 def deposit_product(class_, code):
     deposit_product = []
     product_url = f'https://obank.kbstar.com/quics?page=C016613&cc=b061496:b061645&isNew=N&prcode={code}'
@@ -134,9 +156,10 @@ def main():
     driver.quit()
 
     print("# items:", len(products))
-
+    print(product[0])
     columns = ["상품분류", "상품이름", "상품특징"]
     products_df = pd.DataFrame(products, columns=columns)
+    print(products_df.head(3))
 
     data_dir = '../assets/crawling'
     if not os.path.exists(data_dir):
