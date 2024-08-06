@@ -61,3 +61,19 @@ def exampling_definition(word: str, definition: str) -> str:
     example = response.choices[0].message.content.strip()
     return example
 # %%
+def product_cleaning(top_k_sentence: str) -> str:
+
+    messages = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": f"다음 {top_k_sentence} 과 같은 금융상품이 있습니다. 이것의 상품분류와 상품이름 상품특징을 itemwise하여 각각 한줄로 정리해주세요."}
+    ]
+
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",  # model(gpt4 가능)
+        messages=messages,
+        max_tokens=200,
+        temperature=0.1
+    )
+    product = response.choices[0].message.content.strip()
+    return product
