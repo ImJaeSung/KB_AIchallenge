@@ -25,7 +25,8 @@ class HuggingfaceEmbedder_toDB():
         self.model = AutoModel.from_pretrained(model_name)
     
     def embed(self, data):
-        inputs = self.tokenizer(data, return_tensors='pt', padding=True, truncation=True)
+        inputs = self.tokenizer(
+            data, return_tensors='pt', padding=True, truncation=True)
         outputs = self.model(**inputs)
         embeddings = outputs.last_hidden_state.mean(dim=1).detach().numpy()
         return embeddings.tolist()
@@ -36,7 +37,10 @@ class BERT_Embedder():
         self.model = BertModel.from_pretrained(model_name)
     
     def embed(self, text):
-        inputs = self.tokenizer(text, return_tensors='pt', padding=True, truncation=True)
+        inputs = self.tokenizer(
+            text, return_tensors='pt', padding=True, truncation=True, max_length=512
+        )
+        self.model.eval()
         with torch.no_grad():
             outputs = self.model(**inputs)
         cls_embedding = outputs.last_hidden_state[:, 0, :] # [CLS] token embedding

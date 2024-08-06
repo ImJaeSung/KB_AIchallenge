@@ -3,9 +3,8 @@ import argparse
 import json
 import os
 import sys
-import numpy as np
 import pandas as pd
-from typing import List, Optional
+from typing import Optional
 from pydantic import BaseModel
 
 # %%
@@ -30,10 +29,6 @@ from modules.Openai_utils import exampling_definition, simplify_definition
 from modules.Cosine_Similarity import postprocessing, top_K
 
 # %%
-api_key = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
-
-data = pd.read_csv('./assets/data.csv')
-# %%
 def get_args(debug):
     parser = argparse.ArgumentParser('parameters')
 
@@ -47,13 +42,13 @@ def get_args(debug):
     else:
         return parser.parse_args()
 
-
+#%%
 # %%
 def getAiAnswer(df, question):
-    print(df)
     # %%
+    print(f"Question: {question}")
     config = vars(get_args(debug=True))
-
+    
     # base
     web_word = None
     web_definition = None
@@ -61,23 +56,34 @@ def getAiAnswer(df, question):
     ret_word = None
     ret_definition = None
     ret_score = None
-
+    data_dir = './assets'
+    openai_api_key = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
     # %%
-    ### 3
-
-    # 3-1. question에 대한 embedding vector 생성
-    embedder = get_embedder(embedding_type=config["embedding_type"], api_key=api_key)
+    """question embedding"""
+    # question = "통화옵션의 정의가 뭐야?" # for debugging
+    embedder = get_embedder(
+        embedding_type=config["embedding_type"], api_key=openai_api_key
+    )
     embedding_q = embedder.embed([question])
 
     # DB에서 코사인 유사도로 retriver -> result 추출
     print("KB DB와 유사도 결과 비교\n")
 
     # cosine class에서 함수 불러오기
-    cosine = Cosine_Similarity.CosineSimilarityCalculator(threshold=config["threshold"])
+    cosine = Cosine_Similarity.CosineSimilarityCalculator(
+        threshold=config["threshold"]
+    )
     result = cosine.calculate_similarity(embedding_q, df)
-
+    #%%
+    """generating answer:   
+    [1] 두개의 retriever 중 생성된 해답에 대한 최종 word, definition, plus_info 생성
+    [2] DB 먼저 확인 -> 없음 WEB 결과
+    """
+    
     if result == '해당 단어에 대한 정의가 사전에 정의되어있지 않습니다. 외부 검색 결과로 알려드리겠습니다.':
-        print("KB DB 내에 해당 단어의 정보가 없음\n")
+        
+        print("KB DB 내에 해당 단어의 정보가 없음...\n")
+        
         query = question
         web_research = Web_Research.WebResearch()
         titles_blog, links_blog = web_research.get_blog_links(query)
@@ -110,21 +116,22 @@ def getAiAnswer(df, question):
             text_list.extend(text)
             link_list.extend([link] * len(text))
 
-        docs_objects = [Document(page_content=text, metadata={"source": link}) for text, link in
-                        zip(text_list, link_list)]
+        docs_objects = [Document(
+            page_content=text, metadata={"source": link}
+        ) for text, link in zip(text_list, link_list)
+        ]
 
         # openai embedding model
-        openai_api_key = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
         embeddings_model = OpenAIEmbeddings(openai_api_key=openai_api_key)
 
         # faiss vectorstore
-        vectorstore = FAISS.from_documents(docs_objects,
-                                           embedding=embeddings_model,
-                                           distance_strategy=DistanceStrategy.COSINE
-                                           )
-        vectorstore
+        vectorstore = FAISS.from_documents(
+            docs_objects,
+            embedding=embeddings_model,
+            distance_strategy=DistanceStrategy.COSINE
+        )
 
-        print("외부 retriver를 통한 vectorstore 생성\n")
+        print("외부 retriver를 통한 vectorstore 생성...\n")
 
         # web_retriever
         retriever = vectorstore.as_retriever(
@@ -163,65 +170,69 @@ def getAiAnswer(df, question):
         # Run
         text_processor = Text_Preprocess.TextProcessor()
         web_word = text_processor.extract_first_noun_phrase(query)
-        web_definition = chain.invoke({'context': (format_docs(docs)), 'question': query})
+        web_definition = chain.invoke(
+            {'context': (format_docs(docs)), 'question': query}
+        )
         web_link = docs_link
         embedding_word = embedder.embed([web_word])
 
-        new_df = pd.DataFrame({'word': web_word, 'definition': web_definition, 'embedding': embedding_word})
+        new_df = pd.DataFrame(
+            {'word': web_word, 'definition': web_definition, 'embedding': embedding_word}
+        )
 
-        data_dir = './assets'
-        if not os.path.exists(data_dir):
-            os.makedirs(data_dir)
-        new_df.to_csv(f'{data_dir}/data_{web_word}.csv', index=False)
+        # #TODO: 기존의 사전에 붙이기 
+        # if not os.path.exists(data_dir):
+        #     os.makedirs(data_dir)
+        # new_df.to_csv(f'{data_dir}/data_{web_word}.csv', index=False)
 
 
     else:
+        print("DB 내 단어 정보 생성...\n")
         ret_word = result['word']
         ret_definition = result['definition']
         ret_score = result['score']
 
     # %%
-    ### 4
-    # print("\n1차 retriver 생성\n")
-
-    # 두개의 retriever 중 생성된 해답에 대한 최종 word, definition, plus_info 생성
-    # DB 먼저 확인 -> 없음 WEB 결과
-
     word = ret_word if ret_word is not None else web_word
     definition = ret_definition if ret_definition is not None else web_definition
     plus_info = ret_score if ret_score is not None else web_link  # EB에서는 유사도, WEB에서는 링크
 
-    ### 5
+    """simplify the answer"""
     definition_gen = simplify_definition(definition)
     exampling_gen = exampling_definition(word, definition)
 
 
-    ### 6. 상품 추천
-
-
+    """recommed the product"""
     with open(f'{data_dir}/textual_product.json', 'r', encoding='utf-8') as jsonfile:
-        textual_data = json.load(jsonfile)
+        textual_data = json.load(jsonfile) # import KB product data
 
     #%%
-    # 상위 3개의 유사한 문장을 찾음
+    # TODO: mydata와 결합
     # my_data = pd.read_csv()
     # my_textual_data = tab2text(my_data)
-    my_textual_data = "나이는 28살, 성별은 남성, 직업은 공무원, 소득은 월 280만원"
+    my_textual_data = "나이는 28살, 성별은 남성, 직업은 공무원, 소득은 월 280만원" # for debugging
 
     full_query = my_textual_data + question + " " + definition
-    #%%
     top_k_sentences, top_k_scores = top_K(full_query, textual_data, k=1)
-
-
-
-    ### 최종
-
+    #%%
+    """Final answer"""
     if plus_info == ret_score:
-        answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n해당 단어의 정의는 {plus_info}의 저희 dictionary 상에서 높은 유사도를 보유합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{top_k_sentences}'
+        answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n해당 단어의 정의는 {plus_info:.4f}의 저희 dictionary 상에서 높은 유사도를 보유합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{top_k_sentences}'
     elif plus_info == web_link:
         answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n해당 단어의 추가 정보는 {plus_info} 링크에서 더욱 자세하게 확인가능합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{top_k_sentences}'
 
     return answer
 
+#%%
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("Usage: python test_tmp.py <question>")
+        sys.exit(1)
 
-print(getAiAnswer(data, "자산관리의 정의가 뭐야?"))
+    question = sys.argv[1]
+    
+    """dataset"""
+    df = pd.read_csv('./assets/data.csv')
+    df['embedding'] = df['embedding'].apply(json.loads)
+    
+    print(getAiAnswer(df, question))
