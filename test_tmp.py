@@ -235,4 +235,4 @@ if __name__ == '__main__':
     df = pd.read_csv('./assets/data.csv')
     df['embedding'] = df['embedding'].apply(json.loads)
     
-    print(getAiAnswer(df, question))
+    print(getAiAnswer(df, "자산관리의 정의가 뭐야?"))
