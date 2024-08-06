@@ -1,4 +1,5 @@
 # %%
+import random
 import argparse
 import json
 import os
@@ -46,6 +47,7 @@ def get_args(debug):
 # %%
 def getAiAnswer(df, question):
     # %%
+    # question = "기회비용 정의가 뭐야?" # for debugging
     print(f"Question: {question}")
     config = vars(get_args(debug=True))
     
@@ -60,7 +62,6 @@ def getAiAnswer(df, question):
     openai_api_key = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
     # %%
     """question embedding"""
-    # question = "기회비용 정의가 뭐야?" # for debugging
     embedder = get_embedder(
         embedding_type=config["embedding_type"], api_key=openai_api_key
     )
@@ -201,18 +202,23 @@ def getAiAnswer(df, question):
     definition_gen = simplify_definition(definition)
     exampling_gen = exampling_definition(word, definition)
 
+    #%%
+    """Mydata"""
+    with open(f'{data_dir}/textual_mydata.json', 'r', encoding='utf-8') as jsonfile:
+        textual_mydata = json.load(jsonfile) # import my data
 
+    # my_textual_data = "나이는 28살, 성별은 남성, 직업은 공무원, 소득은 월 280만원" # for debugging
+    definition_first = postprocessing(definition)
+
+    mydata = random.choice(textual_mydata)
+    print(f'People: {mydata} \n')
+    
+    full_query = mydata + " " + question + " " + definition_first
+    #%%
     """recommed the product"""
     with open(f'{data_dir}/textual_product.json', 'r', encoding='utf-8') as jsonfile:
         textual_data = json.load(jsonfile) # import KB product data
 
-    #%%
-    # TODO: mydata와 결합
-    # my_data = pd.read_csv()
-    # my_textual_data = tab2text(my_data)
-    my_textual_data = "나이는 28살, 성별은 남성, 직업은 공무원, 소득은 월 280만원" # for debugging
-
-    full_query = my_textual_data + question + " " + definition
     top_k_sentences, top_k_scores = top_K(full_query, textual_data, k=1)
     recommend_product = product_cleaning(top_k_sentences)
     #%%
@@ -222,9 +228,8 @@ def getAiAnswer(df, question):
         answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n해당 단어의 정의는 {plus_info:.4f}의 저희 dictionary 상에서 높은 유사도를 보유합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{recommend_product}'
     elif plus_info == web_link:
         answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n해당 단어의 추가 정보는 {plus_info} 링크에서 더욱 자세하게 확인가능합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{recommend_product}'
-
+    #%%
     return answer
-
 #%%
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -237,4 +242,4 @@ if __name__ == '__main__':
     df = pd.read_csv('./assets/data.csv')
     df['embedding'] = df['embedding'].apply(json.loads)
     
-    print(getAiAnswer(df, "자산관리의 정의가 뭐야?"))
+    print(getAiAnswer(df, question))
