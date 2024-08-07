@@ -48,7 +48,7 @@ def get_args(debug):
 # %%
 def getAiAnswer(df, question):
     # %%
-    question = "기회비용 정의가 뭐야?" # for debugging
+    # question = "기회비용 정의가 뭐야?" # for debugging
     print(f"Question: {question}")
     config = vars(get_args(debug=True))
     
