@@ -3,7 +3,7 @@ from kb_backend.utils.authUtil import *
 from kb_backend.db.elasticsearchClient import *
 from datetime import datetime
 from kb_backend.dto.chatDto import *
-from test_tmp import getAiAnswer
+from main import getAiAnswer
 
 router = APIRouter()
 
