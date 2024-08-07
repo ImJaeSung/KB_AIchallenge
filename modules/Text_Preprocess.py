@@ -2,7 +2,7 @@ import re
 
 class TextProcessor:
     def __init__(self):
-        self.split_pattern = re.compile(r'(의|가|은|는|을|를|에|에서|에게)\b')
+        self.split_pattern = re.compile(r'(의|이|가|은|는|을|를|에|에서|에게)\b')
         self.clean_pattern = re.compile(
             r'\\n|\\u[a-zA-Z0-9]{4}|\\u200b|\\|http[^\s]*|\'|\"|<br/>|</p>'
         )

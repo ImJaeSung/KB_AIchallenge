@@ -45,13 +45,13 @@ class WebResearch:
 
         for link in links:
             response = requests.get(link, headers=self.headers)
-            response.raise_for_status()
+            # response.raise_for_status()
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # extract real blog url
             real_engine = "https://blog.naver.com" + soup.find('iframe').get('src')
             response_new = requests.get(real_engine, headers=self.headers)
-            response_new.raise_for_status()
+            # response_new.raise_for_status()
             soup_new = BeautifulSoup(response_new.content, 'html.parser')
 
             bodys = soup_new.find_all('div', attrs={"class": "se-module se-module-text"})
