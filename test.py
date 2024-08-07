@@ -95,7 +95,7 @@ def getAiAnswer(df, question):
 
         # text splitting
         text_splitter = CharacterTextSplitter(
-            separator='.',
+            separator=' ',
             chunk_size=400,
             chunk_overlap=200,
             length_function=len,
