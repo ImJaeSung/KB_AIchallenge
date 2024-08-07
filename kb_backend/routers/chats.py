@@ -84,7 +84,6 @@ def createChatNoAuth(sendChatRequest: SendNoAuthChatRequest):
     aiResponse = getAiAnswer(df, question)
     findNewDataAndSave()
 
-    esClient.indices.refresh(index="chats")
     return {
         "content": aiResponse,
         "isAiResponse": True,
