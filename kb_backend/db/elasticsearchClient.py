@@ -102,11 +102,8 @@ def esIndexToDf(index):
 def findNewDataAndSave():
     folderPath = "assets"
     for file in os.listdir(folderPath):
-        if file != "data.csv":
-            print("fileName: ", file)
+        if file.startswith("data_"):
             data = pd.read_csv(f"{folderPath}/{file}")
-            # 첫 번째 행 데이터 가져오기
-            print(data.iloc[0])
             esClient.index(index="word_dictionary", body={
                 "word": data.iloc[0]["word"],
                 "definition": data.iloc[0]["definition"],

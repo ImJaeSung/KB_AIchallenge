@@ -182,9 +182,9 @@ def getAiAnswer(df, question):
         )
 
         # #TODO: 기존의 사전에 붙이기 
-        # if not os.path.exists(data_dir):
-        #     os.makedirs(data_dir)
-        # new_df.to_csv(f'{data_dir}/data_{web_word}.csv', index=False)
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+        new_df.to_csv(f'{data_dir}/data_{web_word}.csv', index=False)
 
 
     else:

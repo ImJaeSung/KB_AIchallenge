@@ -128,12 +128,15 @@ const AiAnswerComponent = ({ chat }) => {
       )}
       {showContent3 && (
         <AiChatTitle>
-          <TypingComponent content="3. 세 번째 제목" delay={500} />
+          <TypingComponent content="3. 상품 추천" delay={500} />
         </AiChatTitle>
       )}
       {showContent3 && (
         <AiChatContent>
-          <TypingComponent content={summarizedAiChat.test} delay={500} />
+          <TypingComponent
+            content={summarizedAiChat.recomendation}
+            delay={500}
+          />
         </AiChatContent>
       )}
     </AiChatContentContainer>
@@ -164,7 +167,7 @@ export default function ChatContents() {
                 </AiChatContent>
                 <AiChatTitle>3. 세 번째 제목</AiChatTitle>
                 <AiChatContent>
-                  {summarizeAiChat(chat.content).test}
+                  {summarizeAiChat(chat.content).recomendation}
                 </AiChatContent>
               </AiChatContentContainer>
             )

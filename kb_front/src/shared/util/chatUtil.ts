@@ -3,6 +3,6 @@ export function summarizeAiChat(content) {
   return {
     definition: chats[0].substring("1. 단어 정의\n".length),
     example: chats[1].substring("2. 예시 상황\n".length),
-    test: "내용 내용 내용 내용 내용 내용 내용 내용 내용 내용 내용 내용 내용 내용 내용 ",
+    recomendation: chats[2].substring("3. 상품 추천\n".length),
   };
 }

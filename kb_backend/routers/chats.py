@@ -3,7 +3,7 @@ from kb_backend.utils.authUtil import *
 from kb_backend.db.elasticsearchClient import *
 from datetime import datetime
 from kb_backend.dto.chatDto import *
-from test import getAiAnswer
+from test_tmp import getAiAnswer
 
 router = APIRouter()
 
@@ -48,7 +48,6 @@ def createChat(request: Request, sendChatRequest: SendChatRequest):
         "createdAt": userSendTime
     })["_id"].encode("utf-8")
 
-    # TODO: ai 답변 생성하는 로직 추가
     df = esIndexToDf("word_dictionary")
     aiResponse = getAiAnswer(df, question)
     aiResponseTime = datetime.now()
