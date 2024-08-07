@@ -1,13 +1,10 @@
+#%%
 import torch
-# langchain_openaiembedding
-from langchain_openai import OpenAIEmbeddings
 
-# Transformers 
+from langchain_openai import OpenAIEmbeddings
 from transformers import AutoModel, AutoTokenizer
 from transformers import BertTokenizer, BertModel
-
-
-
+#%%
 # OpenAI embedding
 class OpenAIEmbedder_toDB():
     def __init__(self, api_key):

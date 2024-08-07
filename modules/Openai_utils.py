@@ -7,10 +7,23 @@ client = OpenAI(api_key="sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w
 #%%
 # exampling with word and definition
 def exampling_definition(word: str, definition: str) -> str:
+    prompt = """
+    Please generate an appropriate response to the given requirements and instructions.\n
+    Requirements and Instructions : \n
+    1. Give an example situation where a financial consumer would use the financial word in korean. \n
+    2. Be brief, with a maximum of 5 sentences.
+    3. Facts must not be changed. \n
+    """+ f'\Word: {word}\n' + f'\nDefintion: {definition}\n' + 'Situation: \n'
 
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": f"다음 정의를 금융소비자가 해당 단어를 사용할만한 예시 상황을 최대 5문장 안으로 간단하게 말해주세요. : \n\n단어 : {word}, \n\n정의: {definition}\n\n예시상황:"}
+        {
+            "role": "system", 
+            "content": "You are a helpful assistant that explains financial terms to people who have trouble understanding them in korean."
+        },
+        {
+            "role": "user", 
+            "content": prompt
+        }
     ]
 
 
@@ -18,54 +31,62 @@ def exampling_definition(word: str, definition: str) -> str:
         model="gpt-3.5-turbo",  # model(gpt4 가능)
         messages=messages,
         max_tokens=500,
-        temperature=0.1
+        temperature=0.5
     )
     example = response.choices[0].message.content.strip()
     return example
 
 #%%
 # changing answer(response -> simplify answer)
-def simplify_definition(definition: str) -> str:
+def simplify_definition(word, definition: str) -> str:
+    prompt = """
+    Please generate an appropriate response to the given requirements and instructions.\n
+    Requirements and Instructions : \n
+    1. You must explain the financial term to people who have trouble understanding them in korean. \n
+    2. If you think a financial consumer does not know the following definition,
+        you should rewrite the definition so that it is easy for the person to understand, not too long, and free of difficult words.  \n
+    3. The given financial term must be included in the corresponding explanation. \n
+    4. The given financial term should be included in your reponse.
+    5. Facts must not be changed. \n
+    """+ f'\Word: {word}\n' + f'\nDefintion: {definition}\n' + 'Rewritten Definition: \n'
 
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": f"다음 정의를 금융소비자가 해당 단어를 모른다고 생각했을 때 그 사람이 이해하기 쉽고 너무 길지 않으며 어려운 단어들이 없도록 정의를 재생성해 주세요. 이때 단어를 말해주고 문장을 시작해주세요.:\n\n정의: {definition}\n\n재작성된 정의:"}
+        {
+            "role": "system", 
+            "content": "You're a helpful assistant that explains financial terms to people who have trouble understanding them in korean."
+        },
+        {
+            "role": "user", 
+            "content": prompt}
     ]
-
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",  # model(gpt4 가능)
         messages=messages,
         max_tokens=200,
-        temperature=0.1
+        temperature=0.5
     )
     simplified_definition = response.choices[0].message.content.strip()
     return simplified_definition
 
-#%%
-# exampling with word and definition
-def exampling_definition(word: str, definition: str) -> str:
-
-    messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": f"다음 정의를 금융소비자가 해당 단어를 사용할만한 예시 상황을 최대 5문장 안으로 간단하게 말해주세요. : \n\n단어 : {word}, \n\n정의: {definition}\n\n예시상황:"}
-    ]
-
-
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",  # model(gpt4 가능)
-        messages=messages,
-        max_tokens=500,
-        temperature=0.1
-    )
-    example = response.choices[0].message.content.strip()
-    return example
 # %%
-def product_cleaning(top_k_sentence: str) -> str:
+def product_cleaning(best_product: str) -> str:
+    prompt = """
+    Please generate an appropriate response to the given requirements and instructions.\n
+    Requirements and Instructions : \n
+    1. In the given product information, organize the product category, product name, and product features 
+        in the form of itemwise into one line each in korean. \n
+    2. Facts must not be changed. \n
+    """+ f'\Financial product information: {best_product}\n' + 'Rewritten Financial product information: \n'
 
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": f"다음 {top_k_sentence} 과 같은 금융상품이 있습니다. 이것의 상품분류와 상품이름 상품특징을 itemwise하여 각각 한줄로 정리해주세요."}
+        {
+            "role": "system", 
+            "content": "You are a helpful assistant that explain financial product in korean."},
+        {
+            "role": "user", 
+            "content": prompt
+        }
     ]
 
 
@@ -73,7 +94,7 @@ def product_cleaning(top_k_sentence: str) -> str:
         model="gpt-3.5-turbo",  # model(gpt4 가능)
         messages=messages,
         max_tokens=200,
-        temperature=0.1
+        temperature=0.5
     )
     product = response.choices[0].message.content.strip()
     return product

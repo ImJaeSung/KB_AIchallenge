@@ -10,7 +10,7 @@ from tqdm import tqdm
 import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from modules.tab2text import tab2text
+from modules.utils import tab2text
 #%%
 def main():
     #%%

@@ -30,7 +30,7 @@ from modules import Cosine_Similarity, Web_Research, Text_Preprocess
 from modules.Embedding import get_embedder
 from modules.Openai_utils import exampling_definition, simplify_definition, product_cleaning
 from modules.Cosine_Similarity import postprocessing, top_K
-
+from modules.bm25 import best_product
 # %%
 def get_args(debug):
     parser = argparse.ArgumentParser('parameters')
@@ -227,19 +227,7 @@ def getAiAnswer(df, question):
     # bm25
     """dataset"""
 
-    tokenizer = Okt()
-
-    tokenized = [tokenizer.morphs(text) for text in textual_data]
-    bm25 = BM25Okapi(tokenized)
-
-    # query
-    tokenized_query = tokenizer.morphs(full_query)
-    scores = bm25.get_scores(tokenized_query)
-
-    #%%
-    top_doc_index = max(range(len(scores)), key=lambda i: scores[i])
-    top_docs = [textual_data[top_doc_index]]
-
+    
     recommend_product = product_cleaning(top_docs)
 
     '''

@@ -1,9 +1,13 @@
+#%%
+import os
+import sys
+
 import requests
-import re
 from bs4 import BeautifulSoup
-from .Text_Preprocess import TextProcessor
 
-
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from modules.utils import TextProcessor
+#%%
 class WebResearch:
     def __init__(self):
         self.headers = {"User-Agent": "Mozilla/5.0"}
@@ -119,8 +123,8 @@ class WebResearch:
             contents.append(content)
 
         return contents
-
-# 예시 사용
+#%%
+# For example
 if __name__ == "__main__":
     question = '자산관리의 정의가 뭐야?'
     query = question

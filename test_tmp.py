@@ -25,10 +25,11 @@ from langchain_core.runnables import RunnablePassthrough
 
 # %%
 ## kb_handler
-from modules import Cosine_Similarity, Web_Research, Text_Preprocess
+from modules import Cosine_Similarity, Web_Research
 from modules.Embedding import get_embedder
 from modules.Openai_utils import exampling_definition, simplify_definition, product_cleaning
-from modules.Cosine_Similarity import postprocessing, topK_product
+from modules.utils import TextProcessor, postprocessing 
+from modules.recommender import topK_product_rec, best_product_rec 
 
 # %%
 def get_args(debug):
@@ -47,7 +48,7 @@ def get_args(debug):
 # %%
 def getAiAnswer(df, question):
     # %%
-    # question = "기회비용 정의가 뭐야?" # for debugging
+    question = "기회비용 정의가 뭐야?" # for debugging
     print(f"Question: {question}")
     config = vars(get_args(debug=True))
     
@@ -169,7 +170,7 @@ def getAiAnswer(df, question):
         chain = prompt | llm | StrOutputParser()
 
         # Run
-        text_processor = Text_Preprocess.TextProcessor()
+        text_processor = TextProcessor()
         web_word = text_processor.extract_first_noun_phrase(query)
         web_definition = chain.invoke(
             {'context': (format_docs(docs)), 'question': query}
@@ -199,7 +200,7 @@ def getAiAnswer(df, question):
     plus_info = ret_score if ret_score is not None else web_link  # EB에서는 유사도, WEB에서는 링크
 
     """simplify the answer"""
-    definition_gen = simplify_definition(definition)
+    definition_gen = simplify_definition(word, definition)
     exampling_gen = exampling_definition(word, definition)
 
     #%%
@@ -220,15 +221,19 @@ def getAiAnswer(df, question):
         textual_data = json.load(jsonfile) # import KB product data
     
     textual_embedding = np.load(f'{data_dir}/textual_product.npy')
-    topk_product, topk_score = topK_product(
+    topk_product, topk_score = topK_product_rec(
         full_query, textual_data, textual_embedding, k=5
     )
-    recommend_product = product_cleaning(topk_product)
+    # recommend_product = product_cleaning(topk_product)
+    #%%
+    """BM25"""
+    best_product, best_score = best_product_rec(topk_product, full_query)
+    recommend_product = product_cleaning(best_product)
     #%%
     """Final answer"""
     #TODO: output 문장 정리
     if plus_info == ret_score:
-        answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n해당 단어의 정의는 {plus_info:.4f}의 저희 dictionary 상에서 높은 유사도를 보유합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{recommend_product}'
+        answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n\n해당 단어의 정의는 {plus_info:.4f}의 저희 dictionary 상에서 높은 유사도를 보유합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{recommend_product}'
     elif plus_info == web_link:
         answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n해당 단어의 추가 정보는 {plus_info} 링크에서 더욱 자세하게 확인가능합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{recommend_product}'
     #%%
