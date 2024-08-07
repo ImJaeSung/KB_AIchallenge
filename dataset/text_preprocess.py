@@ -5,9 +5,12 @@ import json
 
 from tqdm import tqdm
 import pandas as pd
+import numpy as np
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules.tab2text import tab2text
+from modules.Embedding import get_embedder
+
 #%%
 def main():
     data_dir = "../assets"
@@ -31,9 +34,15 @@ def main():
     # delete '판매중단'
     textual = [data for data in textual_data if "판매중단" not in data]
 
+    embedder = get_embedder(embedding_type="bert")
+    textual_embedding = embedder.embed(textual_data)
+    
     #%%
     with open(f'{data_dir}/textual_product.json', 'w', encoding='utf-8') as jsonfile:
         json.dump(textual, jsonfile, ensure_ascii=False, indent=4)
+    
+    np.save(f'{data_dir}/textual_product.npy', textual_embedding)
+    
     return
 
 # %%

@@ -5,6 +5,7 @@ import json
 import os
 import sys
 import pandas as pd
+import numpy as np
 from typing import Optional
 from pydantic import BaseModel
 
@@ -27,7 +28,7 @@ from langchain_core.runnables import RunnablePassthrough
 from modules import Cosine_Similarity, Web_Research, Text_Preprocess
 from modules.Embedding import get_embedder
 from modules.Openai_utils import exampling_definition, simplify_definition, product_cleaning
-from modules.Cosine_Similarity import postprocessing, top_K
+from modules.Cosine_Similarity import postprocessing, topK_product
 
 # %%
 def get_args(debug):
@@ -43,7 +44,6 @@ def get_args(debug):
     else:
         return parser.parse_args()
 
-#%%
 # %%
 def getAiAnswer(df, question):
     # %%
@@ -103,7 +103,7 @@ def getAiAnswer(df, question):
 
         # text splitting
         text_splitter = CharacterTextSplitter(
-            separator='.',
+            separator=' ',
             chunk_size=400,
             chunk_overlap=200,
             length_function=len,
@@ -218,9 +218,12 @@ def getAiAnswer(df, question):
     """recommed the product"""
     with open(f'{data_dir}/textual_product.json', 'r', encoding='utf-8') as jsonfile:
         textual_data = json.load(jsonfile) # import KB product data
-
-    top_k_sentences, top_k_scores = top_K(full_query, textual_data, k=1)
-    recommend_product = product_cleaning(top_k_sentences)
+    
+    textual_embedding = np.load(f'{data_dir}/textual_product.npy')
+    topk_product, topk_score = topK_product(
+        full_query, textual_data, textual_embedding, k=5
+    )
+    recommend_product = product_cleaning(topk_product)
     #%%
     """Final answer"""
     #TODO: output 문장 정리
