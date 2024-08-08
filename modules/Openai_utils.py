@@ -13,6 +13,7 @@ def exampling_definition(word: str, definition: str) -> str:
     1. Give an example situation where a financial consumer would use the financial word in korean. \n
     2. Be brief, with a maximum of 5 sentences.
     3. Facts must not be changed. \n
+    4. Be polite, please. \n
     """+ f'\Word: {word}\n' + f'\nDefintion: {definition}\n' + 'Situation: \n'
 
     messages = [
@@ -48,6 +49,7 @@ def simplify_definition(word, definition: str) -> str:
     3. The given financial term must be included in the corresponding explanation. \n
     4. The given financial term should be included in your reponse.
     5. Facts must not be changed. \n
+    6. Be polite, please.\n
     """+ f'\Word: {word}\n' + f'\nDefintion: {definition}\n' + 'Rewritten Definition: \n'
 
     messages = [
@@ -77,6 +79,7 @@ def product_cleaning(best_product: str) -> str:
     1. In the given product information, organize the product category, product name, and product features 
         in the form of itemwise into one line each in korean. \n
     2. Facts must not be changed. \n
+    3. Be polite, please. \n
     """+ f'\Financial product information: {best_product}\n' + 'Rewritten Financial product information: \n'
 
     messages = [
