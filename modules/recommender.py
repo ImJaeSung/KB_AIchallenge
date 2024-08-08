@@ -7,6 +7,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from rank_bm25 import BM25Okapi
 from konlpy.tag import Okt    
+'''
+JVMNotFoundException: No JVM shared library file (jvm.dll) found. Try setting up the JAVA_HOME environment variable properly.
+'''
+# 위와 같은 에러가 발생할 때, JAVA를 설치하고 시스템 환경변수를 설정
+# 시스템 환경변수가 설정이 안될시, 다음 주석처리 되어있는 코드로 강제 설정
+os.environ['JAVA_HOME'] = r'C:\Program Files\Java\jdk-21\bin\server'
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from modules.Embedding import get_embedder
