@@ -28,12 +28,15 @@ from langchain_core.runnables import RunnablePassthrough
 from modules import Cosine_Similarity, Web_Research
 from modules.Embedding import get_embedder
 from modules.Openai_utils import exampling_definition, simplify_definition, product_cleaning
-from modules.utils import TextProcessor, postprocessing 
+from modules.utils import TextProcessor, postprocessing, set_random_seed  
 from modules.recommender import topK_product_rec, best_product_rec 
 
 # %%
 def get_args(debug):
     parser = argparse.ArgumentParser('parameters')
+
+    parser.add_argument("--seed", type=int, default=0, 
+                        help="seed for repeatable results")
 
     parser.add_argument('--embedding_type', type=str, default='openai',
                         help='embedding type (options: openai, huggingface)')
@@ -50,7 +53,9 @@ def getAiAnswer(df, question):
     # %%
     # question = "기회비용 정의가 뭐야?" # for debugging
     print(f"Question: {question}")
-    config = vars(get_args(debug=True))
+    config = vars(get_args(debug=False))
+
+    set_random_seed(config["seed"])
     
     # base
     web_word = None

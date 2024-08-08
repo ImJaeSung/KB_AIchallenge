@@ -1,7 +1,11 @@
 #%%
 import re
+import random
 import pandas as pd
+import numpy as np
 
+import torch
+#%%
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
 #%%
@@ -61,3 +65,16 @@ def tab2text(data: pd.DataFrame, idx):
     # tokenized_text = tokenizer(shuffled_text, padding=True, return_tensors="pt")
     # return tokenized_text
     return text
+
+#%%
+"""for reproducibility"""
+def set_random_seed(seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # 모든 GPU에 대한 시드 고정
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+    # NumPy 시드 고정
+    np.random.seed(seed)
+    random.seed(seed)   
