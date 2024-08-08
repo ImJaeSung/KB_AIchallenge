@@ -64,7 +64,7 @@ def main():
     driver.quit()
 
     columns = ["상품분류", "상품이름", "상품특징"]
-    products_df = pd.DataFrame(product, columns=columns)
+    products_df = pd.DataFrame(products, columns=columns)
 
     data_dir = '../assets/crawling'
     if not os.path.exists(data_dir):
