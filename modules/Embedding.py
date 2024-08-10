@@ -4,6 +4,10 @@ import torch
 from langchain_openai import OpenAIEmbeddings
 from transformers import AutoModel, AutoTokenizer
 from transformers import BertTokenizer, BertModel
+
+#%%
+import logging
+logging.getLogger("transformers.modeling_utils").setLevel(logging.ERROR)
 #%%
 # OpenAI embedding
 class OpenAIEmbedder_toDB():
