@@ -15,7 +15,8 @@ def exampling_definition(openai_info:list, word: str, definition: str) -> str:
     1. Give an example situation where a financial consumer would use the financial word in korean. \n
     2. Be brief, with a maximum of 5 sentences.
     3. Facts must not be changed. \n
-    4. Be polite, please. \n
+    4. You should talk in complete sentences.
+    5. Be polite, please. \n
     """+ f'\Word: {word}\n' + f'\nDefintion: {definition}\n' + 'Situation: \n'
 
     messages = [
@@ -53,7 +54,8 @@ def simplify_definition(openai_info:list, word, definition: str) -> str:
     3. The given financial term must be included in the corresponding explanation. \n
     4. The given financial term should be included in your reponse.
     5. Facts must not be changed. \n
-    6. Be polite, please.\n
+    6. You should talk in complete sentences.
+    7. Be polite, please.\n
     """+ f'\Word: {word}\n' + f'\nDefintion: {definition}\n' + 'Rewritten Definition: \n'
 
     messages = [
@@ -85,7 +87,9 @@ def product_cleaning(openai_info, best_product: str) -> str:
     1. When given the product information, please summarize the - product category, - product name, and - product features 
         in the form of itemwise using dash(-) into one line each in korean. \n
     2. Facts must not be changed. \n
-    3. Be polite, please. \n
+    3. You should talk product category and product name in the form of words, but product features in the form of complete sentences.
+    4. Please return only first sentence when you say product features.  
+    5. Be polite, please. \n
     """+ f'\Financial product information: {best_product}\n' + 'Rewritten Financial product information: \n'
 
     messages = [
