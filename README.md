@@ -2,7 +2,7 @@
 The repository for KB 6th Future Finance A.I. Challenge.
 ## Dataset Preparation
 
-- Download and add the datasets into `data` folder to reproduce our experimental results.\n
+- Download and add the datasets into `data` folder to reproduce our experimental results.
 - Data info :
   - [공공데이터포털 한국산업은행 금융관련 용어](https://www.data.go.kr/data/15044350/fileData.do)
   - [한국은행 경제금융용어 700선](https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=235017&menuNo=200765)
