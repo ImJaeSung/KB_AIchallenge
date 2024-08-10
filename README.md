@@ -3,12 +3,13 @@ The repository for KB 6th Future Finance A.I. Challenge.
 ## Dataset Preparation
 
 - Download and add the datasets into `data` folder to reproduce our experimental results.\n
-Data info :\n
-(1) 공공데이터포털 한국산업은행 금융관련 용어: https://www.data.go.kr/data/15044350/fileData.do \n
-(2) 한국은행 경제금융용어 700선: https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=235017&menuNo=200765 \n
-(3) 금융감독원 금융용어사전: https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021 \n
-(4) https://www.kaggle.com/code/janiobachmann/bank-marketing-campaign-opening-a-term-deposit \n
+- Data info :
+  - [공공데이터포털 한국산업은행 금융관련 용어](https://www.data.go.kr/data/15044350/fileData.do)
+  - [한국은행 경제금융용어 700선](https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=235017&menuNo=200765)
+  - [금융감독원 금융용어사전](https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021)
+  - [Bank Marketing](https://www.kaggle.com/datasets/janiobachmann/bank-marketing-dataset?resource=download&select=bank.csv)
 
+## Usage
 ### 1. Preprocessing 
 
 #### Data preparing: 
@@ -45,7 +46,7 @@ python trust_crawling.py
 python text_preprocess.py
 ```
 
-### 2. Usage 
+### 2. QnA Task
 
 #### Arguments
 
