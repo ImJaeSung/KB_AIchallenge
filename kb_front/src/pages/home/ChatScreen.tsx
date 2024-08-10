@@ -322,6 +322,7 @@ export default function ChatScreen({ isChatScreenOpen, setIsChatScreenOpen }) {
                 <ChatScreenContentInput
                   placeholder="금융의 뜻이 뭐야?"
                   id="content-input"
+                  autoComplete="off"
                   onKeyPress={(event) => {
                     if (event.key === "Enter") {
                       handleSendChat();

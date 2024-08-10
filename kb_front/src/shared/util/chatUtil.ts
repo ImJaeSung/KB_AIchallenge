@@ -1,4 +1,5 @@
 export function summarizeAiChat(content) {
+  console.log("content: ", content);
   const chats = content.split("\n\n");
   return {
     definition: chats[0].substring("1. 단어 정의\n".length),

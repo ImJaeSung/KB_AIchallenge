@@ -81,6 +81,7 @@ def createChatNoAuth(sendChatRequest: SendNoAuthChatRequest):
     question = sendChatRequest.content
     df = esIndexToDf("word_dictionary")
     aiResponse = getAiAnswer(df, question)
+    print(aiResponse)
     findNewDataAndSave()
 
     return {
