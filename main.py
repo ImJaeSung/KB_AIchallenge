@@ -40,8 +40,19 @@ def get_args(debug):
 
     parser.add_argument('--embedding_type', type=str, default='openai',
                         help='embedding type (options: openai, huggingface)')
+    
+    parser.add_argument('--gpt_ver', type=str, default='gpt4',
+                        help='gpt prompt model (options: gpt4, gpt3.5)')
+    
     parser.add_argument('--threshold', type=float, default=0.9,
                         help='consine similarity threshold between question and word')
+    
+    parser.add_argument(
+        "--question",
+        type=str,
+        nargs="?",
+        help="the question your finanical term"
+    )
 
     if debug:
         return parser.parse_args(args=[])
@@ -53,7 +64,7 @@ def getAiAnswer(df, question):
     # %%
     # question = "기회비용 정의가 뭐야?" # for debugging
     print(f"Question: {question}")
-    config = vars(get_args(debug=True))
+    config = vars(get_args(debug=False))
 
     set_random_seed(config["seed"])
     
@@ -65,7 +76,15 @@ def getAiAnswer(df, question):
     ret_definition = None
     ret_score = None
     data_dir = './assets'
-    openai_api_key = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
+    
+    if config["gpt_ver"] == "gpt4":
+        openai_api_key = "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"
+        openai_model = "gpt-4"
+    elif config["gpt_ver"] == "gpt3.5":
+        openai_api_key = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
+        openai_model = "gpt-3.5-turbo"
+
+    openai_info = [openai_api_key, openai_model]
     # %%
     """question embedding"""
     embedder = get_embedder(
@@ -205,8 +224,8 @@ def getAiAnswer(df, question):
     plus_info = ret_score if ret_score is not None else web_link  # EB에서는 유사도, WEB에서는 링크
 
     """simplify the answer"""
-    definition_gen = simplify_definition(word, definition)
-    exampling_gen = exampling_definition(word, definition)
+    definition_gen = simplify_definition(openai_info, word, definition)
+    exampling_gen = exampling_definition(openai_info, word, definition)
 
     #%%
     """Mydata"""
@@ -233,7 +252,7 @@ def getAiAnswer(df, question):
     #%%
     """BM25"""
     best_product, best_score = best_product_rec(topk_product, full_query)
-    recommend_product = product_cleaning(best_product)
+    recommend_product = product_cleaning(openai_info, best_product)
     #%%
     """Final answer"""
     #TODO: output 문장 정리
@@ -245,14 +264,15 @@ def getAiAnswer(df, question):
     return answer
 #%%
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Usage: python test_tmp.py <question>")
-        sys.exit(1)
+    # if len(sys.argv) != 2:
+    #     print("Usage: python test_tmp.py <question>")
+    #     sys.exit(1)
 
-    question = sys.argv[1]
+    # question = sys.argv[1]
+    config = vars(get_args(debug=False))
     
     """dataset"""
     df = pd.read_csv('./assets/data.csv')
     df['embedding'] = df['embedding'].apply(json.loads)
     
-    print(getAiAnswer(df, question))
+    print(getAiAnswer(df, config["question"]))

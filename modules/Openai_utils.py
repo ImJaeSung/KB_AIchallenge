@@ -3,10 +3,12 @@ import openai
 from openai import OpenAI
 #%%
 # api_key
-client = OpenAI(api_key="sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0")
+# client = OpenAI(api_key="sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0")
 #%%
 # exampling with word and definition
-def exampling_definition(word: str, definition: str) -> str:
+def exampling_definition(openai_info:list, word: str, definition: str) -> str:
+    client = OpenAI(api_key=openai_info[0])
+
     prompt = """
     Please generate an appropriate response to the given requirements and instructions.\n
     Requirements and Instructions : \n
@@ -29,7 +31,7 @@ def exampling_definition(word: str, definition: str) -> str:
 
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",  # model(gpt4 가능)
+        model=openai_info[1],  # model(gpt4 가능)
         messages=messages,
         max_tokens=500,
         temperature=0.5
@@ -39,7 +41,9 @@ def exampling_definition(word: str, definition: str) -> str:
 
 #%%
 # changing answer(response -> simplify answer)
-def simplify_definition(word, definition: str) -> str:
+def simplify_definition(openai_info:list, word, definition: str) -> str:
+    client = OpenAI(api_key=openai_info[0])
+    
     prompt = """
     Please generate an appropriate response to the given requirements and instructions.\n
     Requirements and Instructions : \n
@@ -63,7 +67,7 @@ def simplify_definition(word, definition: str) -> str:
     ]
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",  # model(gpt4 가능)
+        model=openai_info[1],  # model(gpt4 가능)
         messages=messages,
         max_tokens=200,
         temperature=0.5
@@ -72,12 +76,14 @@ def simplify_definition(word, definition: str) -> str:
     return simplified_definition
 
 # %%
-def product_cleaning(best_product: str) -> str:
+def product_cleaning(openai_info, best_product: str) -> str:
+    client = OpenAI(api_key=openai_info[0])
+
     prompt = """
     Please generate an appropriate response to the given requirements and instructions.\n
     Requirements and Instructions : \n
-    1. In the given product information, organize the product category, product name, and product features 
-        in the form of itemwise into one line each in korean. \n
+    1. When given the product information, please summarize the - product category, - product name, and - product features 
+        in the form of itemwise using dash(-) into one line each in korean. \n
     2. Facts must not be changed. \n
     3. Be polite, please. \n
     """+ f'\Financial product information: {best_product}\n' + 'Rewritten Financial product information: \n'
@@ -94,7 +100,7 @@ def product_cleaning(best_product: str) -> str:
 
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",  # model(gpt4 가능)
+        model=openai_info[1],  # model(gpt4 가능)
         messages=messages,
         max_tokens=200,
         temperature=0.5
