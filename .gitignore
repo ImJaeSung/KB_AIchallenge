@@ -28,5 +28,4 @@ dist-ssr
 *.sln
 *.sw?
 
-/kb_front/package.json
 venv
