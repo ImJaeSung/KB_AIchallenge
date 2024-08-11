@@ -1,7 +1,7 @@
 # KB_AIchallenge
 The repository for KB 6th Future Finance A.I. Challenge.
 
-> **_NOTE:_** This repository supports [OpenAI API]([https://wandb.ai/site](https://openai.com/index/openai-api/)).
+> **_NOTE:_** This repository supports [OpenAI API](https://openai.com/index/openai-api/).
 > - Please your OpenAI API key into  `main.py` file.
 
 ## Dataset Preparation
