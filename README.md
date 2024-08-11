@@ -57,7 +57,7 @@ python text_preprocess.py
 ```
 python main.py --gpt_ver <gpt_ver> --question <question> 
 ```
-- If you want to use it on the web, contact (@SongJSeop)
+- If you want to use it on the web, contact @SongJSeop.
  
 ## Directory and codes
 
