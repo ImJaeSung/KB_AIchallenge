@@ -17,7 +17,7 @@ The repository for KB 6th Future Finance A.I. Challenge.
 ### 1. Preprocessing 
 
 #### Data preparing: 
-- directory: ./crawling/
+- Directory: `./crawling/`
 
 ```
 python deposit_crawling.py
@@ -36,7 +36,7 @@ python trust_crawling.py
 ```
 
 #### Data preprocess:
-- directory: ./dataset/
+- Directory: `./dataset/`
 
 ```
 python preprocess.py  
