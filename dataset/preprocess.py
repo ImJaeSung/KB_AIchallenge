@@ -1,3 +1,9 @@
+"""
+Data source: 
+[1] https://www.data.go.kr/data/15044350/fileData.do
+[2] https://www.bok.or.kr/portal/bbs/B0000249/view.do?nttId=235017&menuNo=200765
+[3] https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021
+"""
 #%%
 import os
 import sys

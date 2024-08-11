@@ -10,14 +10,12 @@ import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
 #%%
 def postprocessing(text):
-    # 첫 번째 온점의 위치를 찾음
     period_index = text.find('.')
     
-    # 첫 번째 온점이 발견되면 그 위치까지의 문자열을 반환
     if period_index != -1:
         return text[:period_index + 1]
     else:
-        return text  # 온점이 없는 경우, 원본 텍스트 반환
+        return text 
 
 #%%
 class TextProcessor:
@@ -62,8 +60,6 @@ def tab2text(data: pd.DataFrame, idx):
             for i in key
         ]
     )
-    # tokenized_text = tokenizer(shuffled_text, padding=True, return_tensors="pt")
-    # return tokenized_text
     return text
 
 #%%
@@ -71,10 +67,10 @@ def tab2text(data: pd.DataFrame, idx):
 def set_random_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)  # 모든 GPU에 대한 시드 고정
+    torch.cuda.manual_seed_all(seed)  # seed fix for gpu
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-    # NumPy 시드 고정
+    # seed fix for NumPy 
     np.random.seed(seed)
     random.seed(seed)   

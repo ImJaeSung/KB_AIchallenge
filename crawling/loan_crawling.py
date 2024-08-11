@@ -1,3 +1,7 @@
+"""
+Data source: https://obank.kbstar.com/quics?page=C103425
+"""
+
 #%%
 import os
 from tqdm import tqdm
@@ -39,7 +43,7 @@ def main():
     for loan_name, page_value in tqdm(loan_data, desc="get codes..."):
         driver.get(f'https://obank.kbstar.com/quics?page={page_value}')
         time.sleep(2)  # wait for the page to load
-        # for page in range(1, 3):
+
         for j in range(2, 10):
             elements = driver.find_elements(
                 By.CSS_SELECTOR, 'ul.list-product1 > li > div > a'
@@ -53,8 +57,7 @@ def main():
 
                 except (KeyError, AttributeError) as e:
                     print("pass")
-                    # print(f"An error occurred at index {i}: {e}")
-                        # Try to locate the next page button and click it
+
             try:
                 if loan_name == '신용대출':
                     path = f'/html/body/div[1]/div[3]/div[2]/div[6]/div[2]/div/div/form[{j}]/span'
@@ -76,7 +79,6 @@ def main():
                 next_page_button.click()
                 time.sleep(2)  # wait for the new page to load
             except Exception as e:
-                # print("No more pages or an error occurred:", e)
                 print("pass")
 
     #%%
@@ -120,7 +122,7 @@ def main():
             loan_products.append((loan_name, name, feature_1, feature_2))
         except Exception as e:
             print("error")
-            # print(f"An error occurred while fetching product details: {e}")
+            
     #%%
     assert len(loan_products) == 172
     driver.quit()

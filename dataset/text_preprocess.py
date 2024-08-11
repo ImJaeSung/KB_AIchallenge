@@ -31,7 +31,7 @@ def main():
         text = tab2text(data=products, idx=idx)
         textual_data.append(text)
 
-    # delete '판매중단'
+    # except for '판매중단' and '신규중단' product
     textual_data = [data for data in textual_data if "판매중단" not in data]
     textual_data = [data for data in textual_data if "신규중단" not in data]
 

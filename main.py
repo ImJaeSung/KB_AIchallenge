@@ -3,7 +3,6 @@ import random
 import argparse
 import json
 import os
-import sys
 import pandas as pd
 import numpy as np
 from typing import Optional
@@ -17,14 +16,12 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_community.vectorstores.utils import DistanceStrategy
 from langchain.text_splitter import CharacterTextSplitter
-from langchain import hub
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 
 # %%
-## kb_handler
+# our modules
 from modules import Cosine_Similarity, Web_Research
 from modules.Embedding import get_embedder
 from modules.Openai_utils import exampling_definition, simplify_definition, product_cleaning
@@ -62,7 +59,6 @@ def get_args(debug):
 # %%
 def getAiAnswer(df, question):
     # %%
-    # question = "기회비용 정의가 뭐야?" # for debugging
     print(f"Question: {question}")
     config = vars(get_args(debug=False))
 
@@ -78,10 +74,10 @@ def getAiAnswer(df, question):
     data_dir = './assets'
     
     if config["gpt_ver"] == "gpt4":
-        openai_api_key = "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"
+        openai_api_key = "xxx" # put your OpenAI key for GPT-4
         openai_model = "gpt-4"
     elif config["gpt_ver"] == "gpt3.5":
-        openai_api_key = "sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0"
+        openai_api_key = "xxx" # put your OpenAI key for GPT-3.5
         openai_model = "gpt-3.5-turbo"
 
     openai_info = [openai_api_key, openai_model]
@@ -92,19 +88,15 @@ def getAiAnswer(df, question):
     )
     embedding_q = embedder.embed([question])
 
-    # DB에서 코사인 유사도로 retriver -> result 추출
+    # Cosine simliarity with DB -> result  
     print("KB DB와 유사도 결과 비교\n")
 
-    # cosine class에서 함수 불러오기
     cosine = Cosine_Similarity.CosineSimilarityCalculator(
         threshold=config["threshold"]
     )
     result = cosine.calculate_similarity(embedding_q, df)
     #%%
-    """generating answer:   
-    [1] 두개의 retriever 중 생성된 해답에 대한 최종 word, definition, plus_info 생성
-    [2] DB 먼저 확인 -> 없음 WEB 결과
-    """
+    """generating answer"""
     
     if result == '해당 단어에 대한 정의가 사전에 정의되어있지 않습니다. 외부 검색 결과로 알려드리겠습니다.':
         
@@ -112,16 +104,16 @@ def getAiAnswer(df, question):
         
         query = question
         web_research = Web_Research.WebResearch()
-        titles_blog, links_blog = web_research.get_blog_links(query)
+        _, links_blog = web_research.get_blog_links(query)
         contents_blog = web_research.get_blog_contents(links_blog)
 
-        titles_dict, links_dict = web_research.get_dict_links(query)
+        _, links_dict = web_research.get_dict_links(query)
         contents_dict = web_research.get_dict_contents(links_dict)
 
         contents = contents_blog + contents_dict
         links = links_blog + links_dict
 
-        # Document 클래스 정의
+        # Document class
         class Document(BaseModel):
             page_content: str
             metadata: Optional[dict] = None
@@ -206,7 +198,7 @@ def getAiAnswer(df, question):
             {'word': web_word, 'definition': web_definition, 'embedding': embedding_word}
         )
 
-        # #TODO: 기존의 사전에 붙이기 
+        # updating new definition
         if not os.path.exists(data_dir):
             os.makedirs(data_dir)
         new_df.to_csv(f'{data_dir}/data_{web_word}.csv', index=False)
@@ -221,7 +213,7 @@ def getAiAnswer(df, question):
     # %%
     word = ret_word if ret_word is not None else web_word
     definition = ret_definition if ret_definition is not None else web_definition
-    plus_info = ret_score if ret_score is not None else web_link  # EB에서는 유사도, WEB에서는 링크
+    plus_info = ret_score if ret_score is not None else web_link  # DB: similarity score, WEB: source link
 
     """simplify the answer"""
     definition_gen = simplify_definition(openai_info, word, definition)
@@ -232,7 +224,6 @@ def getAiAnswer(df, question):
     with open(f'{data_dir}/textual_mydata.json', 'r', encoding='utf-8') as jsonfile:
         textual_mydata = json.load(jsonfile) # import my data
 
-    # my_textual_data = "나이는 28살, 성별은 남성, 직업은 공무원, 소득은 월 280만원" # for debugging
     definition_first = postprocessing(definition)
 
     mydata = random.choice(textual_mydata)
@@ -242,20 +233,18 @@ def getAiAnswer(df, question):
     #%%
     """recommed the product"""
     with open(f'{data_dir}/textual_product.json', 'r', encoding='utf-8') as jsonfile:
-        textual_data = json.load(jsonfile) # import KB product data
+        textual_data = json.load(jsonfile) # import KB product information
     
     textual_embedding = np.load(f'{data_dir}/textual_product.npy')
-    topk_product, topk_score = topK_product_rec(
+    topk_product, _ = topK_product_rec(
         full_query, textual_data, textual_embedding, k=5
     )
-    # recommend_product = product_cleaning(topk_product)
     #%%
     """BM25"""
-    best_product, best_score = best_product_rec(topk_product, full_query)
+    best_product, _ = best_product_rec(topk_product, full_query)
     recommend_product = product_cleaning(openai_info, best_product)
     #%%
     """Final answer"""
-    #TODO: output 문장 정리
     if plus_info == ret_score:
         answer = f'1. 단어 정의\n{word}에 대한 정의를 알기 쉽게 설명드리겠습니다.\n{definition_gen}\n해당 단어의 정의는 {plus_info:.4f}의 저희 dictionary 상에서 높은 유사도를 보유합니다.\n\n2. 예시 상황\n아래는 해단 단어가 직접 사용될 수 있는 예시 상황입니다.\n{exampling_gen}\n\n3. 상품 추천\n{recommend_product}'
     elif plus_info == web_link:
@@ -264,11 +253,7 @@ def getAiAnswer(df, question):
     return answer
 #%%
 if __name__ == '__main__':
-    # if len(sys.argv) != 2:
-    #     print("Usage: python test_tmp.py <question>")
-    #     sys.exit(1)
 
-    # question = sys.argv[1]
     config = vars(get_args(debug=False))
     
     """dataset"""

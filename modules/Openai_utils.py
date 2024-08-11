@@ -1,9 +1,5 @@
 #%%
-import openai
 from openai import OpenAI
-#%%
-# api_key
-# client = OpenAI(api_key="sk-proj-5vrBpk9gQ4bYF8OljiDST3BlbkFJ5Gz2QGqHc2aW6CYKo8w0")
 #%%
 # exampling with word and definition
 def exampling_definition(openai_info:list, word: str, definition: str) -> str:
@@ -32,7 +28,7 @@ def exampling_definition(openai_info:list, word: str, definition: str) -> str:
 
 
     response = client.chat.completions.create(
-        model=openai_info[1],  # model(gpt4 가능)
+        model=openai_info[1],  # model
         messages=messages,
         max_tokens=500,
         temperature=0.5
@@ -69,9 +65,9 @@ def simplify_definition(openai_info:list, word, definition: str) -> str:
     ]
 
     response = client.chat.completions.create(
-        model=openai_info[1],  # model(gpt4 가능)
+        model=openai_info[1],  # model
         messages=messages,
-        max_tokens=200,
+        max_tokens=500,
         temperature=0.5
     )
     simplified_definition = response.choices[0].message.content.strip()
@@ -104,9 +100,9 @@ def product_cleaning(openai_info, best_product: str) -> str:
 
 
     response = client.chat.completions.create(
-        model=openai_info[1],  # model(gpt4 가능)
+        model=openai_info[1],  # model
         messages=messages,
-        max_tokens=200,
+        max_tokens=500,
         temperature=0.5
     )
     product = response.choices[0].message.content.strip()

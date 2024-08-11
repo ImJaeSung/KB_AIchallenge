@@ -49,13 +49,11 @@ class WebResearch:
 
         for link in links:
             response = requests.get(link, headers=self.headers)
-            # response.raise_for_status()
             soup = BeautifulSoup(response.content, 'html.parser')
 
             # extract real blog url
             real_engine = "https://blog.naver.com" + soup.find('iframe').get('src')
             response_new = requests.get(real_engine, headers=self.headers)
-            # response_new.raise_for_status()
             soup_new = BeautifulSoup(response_new.content, 'html.parser')
 
             bodys = soup_new.find_all('div', attrs={"class": "se-module se-module-text"})
@@ -124,34 +122,3 @@ class WebResearch:
 
         return contents
 #%%
-# For example
-if __name__ == "__main__":
-    question = '자산관리의 정의가 뭐야?'
-    query = question
-    num_results = 3  # 원하는 결과 수 설정
-
-    web_research = WebResearch()
-    
-    # 블로그 링크와 내용 가져오기
-    titles, links = web_research.get_blog_links(query, num_results)
-    contents = web_research.get_blog_contents(links)
-
-    print("Blog Titles and Links:")
-    for title, link in zip(titles, links):
-        print(f"Title: {title}, Link: {link}")
-
-    print("\nBlog Contents:")
-    for content in contents:
-        print(content)
-    
-    # 사전 링크와 내용 가져오기
-    dict_titles, dict_links = web_research.get_dict_links(query, num_results)
-    dict_contents = web_research.get_dict_contents(dict_links)
-
-    print("\nDictionary Titles and Links:")
-    for title, link in zip(dict_titles, dict_links):
-        print(f"Title: {title}, Link: {link}")
-
-    print("\nDictionary Contents:")
-    for content in dict_contents:
-        print(content)

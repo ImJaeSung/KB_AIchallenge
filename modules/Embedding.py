@@ -60,29 +60,3 @@ def get_embedder(embedding_type, **kwargs):
 
 
 #%%
-'''
-from Embedding import OpenAIEmbedder_toDB, HuggingfaceEmbedder_toDB, get_embedder
-
-# openai version
-
-OPENAI_API_KEY = 'api_key'  # api_key
-DATA = word_dict # word_dictionary  ex. ['a','b','c', ...]
-
-embedding_type = "openai"
-embedder = get_embedder(embedding_type, api_key=OPENAI_API_KEY, model="text-embedding-ada-002")
-embedding_dict = embedder.embed(DATA)
-    
-print("Embeddings:")
-print(DATA)
-
-
-# kr-finbert version
-
-MODEL_NAME = 'snunlp/KR-FinBert'
-DATA = word_dict
-
-embedding_type = "huggingface"
-embedder = get_embedder(embedding_type, model_name=MODEL_NAME)
-embedding_dict = embedder.embed(DATA)
-
-'''

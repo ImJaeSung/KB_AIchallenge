@@ -62,13 +62,6 @@ def main():
         "unknown": "알 수 없음"
     }
 
-    # education_mapping = {
-    #     "secondary": "중등교육",
-    #     "tertiary": "고등교육",
-    #     "primary": "초등교육",
-    #     "unknown": "알 수 없음"
-    # }
-
     default_mapping = {"no": "높음", "yes": "낮음", "unknown": "알 수 없음"}
 
     housing_mapping = {"no": "아니요", "yes": "예", "unknown": "알 수 없음"}
@@ -78,7 +71,6 @@ def main():
 
     mydata['직업'] = mydata['직업'].map(job_mapping)
     mydata['결혼여부'] = mydata['결혼여부'].map(marital_mapping)
-    # mydata['교육 수준'] = mydata['교육 수준'].map(education_mapping)
     mydata['신용'] = mydata['신용'].map(default_mapping)
     mydata['주택대출'] = mydata['주택대출'].map(housing_mapping)
     mydata['개인대출'] = mydata['개인대출'].map(loan_mapping)

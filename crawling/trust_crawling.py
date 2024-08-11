@@ -1,3 +1,6 @@
+"""
+Data source: https://obank.kbstar.com/quics?page=C016531
+"""
 #%%
 import os
 from selenium import webdriver
@@ -115,17 +118,16 @@ def main():
                 time.sleep(2)
                 product_list = driver.find_element(By.CSS_SELECTOR, 'ul.list-product1')
 
-                # 모든 'li' 항목 찾기
+                # search 'li'
                 lis = product_list.find_elements(By.TAG_NAME, 'li')
 
                 for li in lis:
-                    # 고유번호 추출
                     a_tag = li.find_element(By.CSS_SELECTOR, 'a.title')
                     onclick_value = a_tag.get_attribute('onclick')
                     id_match = re.search(r"dtlTrust\('([^']*)'", onclick_value)
                     id_value = id_match.group(1) if id_match else 'ID 없음'
                     
-                    # 이름 추출
+                    # product name
                     strong_tag = a_tag.find_element(By.TAG_NAME, 'strong')
                     name = strong_tag.text.strip()
                     

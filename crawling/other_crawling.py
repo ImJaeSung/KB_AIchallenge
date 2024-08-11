@@ -1,10 +1,14 @@
+"""
+Data source: 
+[1] https://obank.kbstar.com/quics?page=C040686
+[2] https://obank.kbstar.com/quics?page=C016622
+"""
 #%%
 import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
 import time
