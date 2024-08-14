@@ -5,8 +5,9 @@ The repository for KB 6th Future Finance A.I. Challenge.
 > - Please your OpenAI API key into  `main.py` file.
 
 ## Proposal
-1. Developed a glossary of financial terms to overcome the unfamiliarity and difficulty of financial terminology and make it easier and clearer to understand.
-2. Generative AI and RAG to easily recreate financial terms and deliver personalized financial content
+1. We developed a glossary of financial terms to simplify and clarify complex financial language, making it easier to understand.
+2. Generative AI and RAG to easily recreate financial terms and deliver personalized financial content.
+   
 ![image](https://github.com/user-attachments/assets/b2f5a6cc-06fc-4072-ac43-8cf0a26cd70c)
 
 ## Dataset Preparation
