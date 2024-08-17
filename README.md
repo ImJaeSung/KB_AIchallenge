@@ -8,10 +8,10 @@ The repository for KB 6th Future Finance A.I. Challenge.
 1. We created a glossary of financial terms to make complex language easier to understand.
 2. Generative AI and RAG to easily recreate financial terms and deliver personalized financial content.
 
-### Framework
+### 1. Framework
 ![image](https://github.com/user-attachments/assets/b2f5a6cc-06fc-4072-ac43-8cf0a26cd70c)
 
-### Demonstration
+### 2. Demonstration
 ![시연영상](https://github.com/user-attachments/assets/b4e66521-ff17-40da-8456-f7e042e34560)
 
 ## Dataset Preparation
