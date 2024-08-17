@@ -10,6 +10,7 @@ The repository for KB 6th Future Finance A.I. Challenge.
 
 ### 1. Framework
 ![image](https://github.com/user-attachments/assets/b2f5a6cc-06fc-4072-ac43-8cf0a26cd70c)
+- For more details, please see `Description.pdf`
 
 ### 2. Demonstration
 ![시연영상](https://github.com/user-attachments/assets/b4e66521-ff17-40da-8456-f7e042e34560)
